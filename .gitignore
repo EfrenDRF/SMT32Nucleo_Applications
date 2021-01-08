@@ -5,6 +5,7 @@
 #Ignore folder content in any project
 /**/.settings/
 /**/Debug/
+/**/.vscode
 
 #Ignore projects files
 /**/.cproject

@@ -108,11 +108,11 @@ void gpio_pinInit(gpio_handle_t const *pGPIOHandle)
  *
  * @Note		-
  */
-uint8_t gpio_Read_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber)
+gpio_pinst_t gpio_Read_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber)
 {
-	uint8_t retValue = 0u;
+	gpio_pinst_t retValue = 0u;
 
-	retValue = (uint8_t)(pGPIOx->IDR >> pinNumber) & 0x0001UL;
+	retValue = (gpio_pinst_t)(pGPIOx->IDR >> pinNumber) & 0x0001UL;
 
 	return retValue;
 }
@@ -149,7 +149,7 @@ uint16_t gpio_Read_Port(gpio_regMap_t *pGPIOx)
  *
  * @Note		-
  */
-void gpio_Write_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber, uint8_t state)
+void gpio_Write_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber, gpio_pinst_t state)
 {
 
 	if( state == MEMMAP_BIT_CLEAN)

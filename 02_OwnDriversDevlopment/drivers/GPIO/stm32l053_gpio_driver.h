@@ -118,6 +118,15 @@ typedef enum
 /*
  *
  */
+typedef enum
+{
+	PIN_LOW,
+	PIN_HIGH
+}gpio_pinst_t;
+
+/*
+ *
+ */
 typedef struct
 {
 	gpio_pinNum_t pinNumber; 	/* pin number 0 ... 15 */
@@ -157,13 +166,13 @@ extern void gpio_DeInit(void);
 /*
  *
  */
-extern uint8_t gpio_Read_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber);
+extern gpio_pinst_t gpio_Read_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber);
 extern uint16_t gpio_Read_Port(gpio_regMap_t *pGPIOx);
 
 /*
  *
  */
-extern void gpio_Write_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber, uint8_t state);
+extern void gpio_Write_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber, gpio_pinst_t state);
 extern void gpio_Write_Port(gpio_regMap_t *pGPIOx, uint16_t u16Value);
 extern void gpio_Toggle_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber);
 

@@ -5,7 +5,7 @@
   * @date      January 4th 2021
   * @version   V1.0.0
   * @brief     Time routine to delay a specific time in milliseconds.
-  *	@Note      This routine is not 100% exactly and must be have a clock around
+  * @Note      This routine is not 100% exactly and must be have a clock around
   *            131kHz in order to work PROPERLY.
   ******************************************************************************
   */
