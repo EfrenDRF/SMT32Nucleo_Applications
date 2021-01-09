@@ -46,7 +46,7 @@ typedef volatile uint32_t vuint32_t;
  */
 
 /**Cortex-M0+ Peripherals=========================================================*/
-/* @TODO */
+#define MEMAP_CORTEX_M0_P_BASEADDR		0xE0000000UL
 
 /**Peripherals====================================================================*/
 #define MEMMAP_IOPORT_BUS_BASEADDR		0x50000000UL
@@ -86,7 +86,7 @@ typedef volatile uint32_t vuint32_t;
 #define MEMAP_TIM22_PERIPH_BASEADDR			(MEMMAP_APB2_BUS_BASEADDR + 0x1400UL)
 #define MEMAP_TIM21_PERIPH_BASEADDR			(MEMMAP_APB2_BUS_BASEADDR + 0x0800UL)
 #define MEMAP_EXTI_PERIPH_BASEADDR			(MEMMAP_APB2_BUS_BASEADDR + 0x0400UL)
-#define MEMAP_SYSCGF_COMP_PERIPH_BASEADDR	(MEMMAP_APB2_BUS_BASEADDR + 0x0000UL)
+#define MEMAP_SYSCFG_COMP_PERIPH_BASEADDR	(MEMMAP_APB2_BUS_BASEADDR + 0x0000UL)
 
 /*
  * Peripherals base address connected to APB1 bus

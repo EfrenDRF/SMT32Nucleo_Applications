@@ -16,6 +16,7 @@
 
 /*Include header files____________________________________________________________*/
 #include "stm32l053_gpio_regMap.h"
+#include "stm32l053_exti_driver.h"
 
 /*typedef definition______________________________________________________________*/
 
@@ -32,7 +33,8 @@ typedef enum
 	IN_MODE,		/* 00: Input mode */
 	OUT_MODE,		/* 01: General purpose output mode */
 	ALTFN_MODE,		/* 10: Alternate function mode */
-	ANALOG_MODE		/* 11: Analog mode (reset state) */
+	ANALOG_MODE,	/* 11: Analog mode (reset state) */
+	IN_IMR_MODE		/* Input Interrupt Mask Request mode */
 }gpio_mode_t;
 
 /*
@@ -135,6 +137,8 @@ typedef struct
 	gpio_ospeed_t oSpeed;		/* output speed cfg */
 	gpio_pupd_t pupd;			/* pull-up/pull-down cfg */
 	gpio_altfun_t altFun;		/* Alternate function selection 0 ..15 */
+	exti_rtsr_t trgSel;			/* Configure the trigger selection bits of the interrupt lines */
+								/* Note: mode must be IN_IMR_MODE to config the hardware int*/
 }gpio_pinCfg_t;
 
 
@@ -151,7 +155,7 @@ typedef struct
 /*Macro definition______________________________________________________________*/
 
 
-/*Global function definition____________________________________________________*/
+/*Global function declaration___________________________________________________*/
 
 /*=================================================================
  * APIs supported by GPIO driver.

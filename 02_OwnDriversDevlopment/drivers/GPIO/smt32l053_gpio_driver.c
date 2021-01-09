@@ -14,10 +14,12 @@
 
 /*Include header files____________________________________________________________*/
 #include "stm32l053_gpio_driver.h"
+#include "stm32l053_rcc_regMap.h"
 
 /*Macro definition_________________________________________________________________*/
 
 /*Global function declaration______________________________________________________*/
+extern void syscfg_EXTI_Cfg(const gpio_regMap_t * const pGPIOx, gpio_pinNum_t pinNum);
 
 
 /****************************************************************
@@ -35,30 +37,30 @@
 void gpio_pinInit(gpio_handle_t const *pGPIOHandle)
 {
   uint8_t u8Tmp = 0u;
-  uint8_t pinNumTmp = pGPIOHandle->GPIOx_pinCfg.pinNumber;	/* Holds user GPIO pin number.*/
+  uint8_t tmpPinNum = pGPIOHandle->GPIOx_pinCfg.pinNumber;	/* Holds user GPIO pin number.*/
   uint8_t afTmp = 0;
 
   // 0.- Clean bit field from PUPDR(must be reset to Analog purposes) cfg register.
-  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->PUPDR, MEMMAP_2B_CLEAN << (2u * pinNumTmp)); /* 00: No pull-up, pull-down */
+  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->PUPDR, MEMMAP_2B_CLEAN << (2u * tmpPinNum)); /* 00: No pull-up, pull-down */
 
   // 1.- Configure the pin mode
-  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->MODER, MEMMAP_2B_CLEAN << (2u * pinNumTmp));
+  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->MODER, MEMMAP_2B_CLEAN << (2u * tmpPinNum));
   u8Tmp = pGPIOHandle->GPIOx_pinCfg.mode;
-  pGPIOHandle->pGPIOx->MODER |= (u8Tmp << (2u*pinNumTmp));
+  pGPIOHandle->pGPIOx->MODER |= (u8Tmp << (2u*tmpPinNum));
 
   if(u8Tmp != ANALOG_MODE)
   {
 	   if( (u8Tmp == OUT_MODE) || (u8Tmp == ALTFN_MODE) )
 	   {
 	  	  // 2.- Configure the pin output type push-pull or open-drain.
-	  	  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->OTYPER, MEMMAP_1B_CLEAN << pinNumTmp); /* 0: Output push-pull */
+	  	  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->OTYPER, MEMMAP_1B_CLEAN << tmpPinNum); /* 0: Output push-pull */
 	  	  u8Tmp = pGPIOHandle->GPIOx_pinCfg.oType;
-	  	  pGPIOHandle->pGPIOx->OTYPER |= (u8Tmp << pinNumTmp);
+	  	  pGPIOHandle->pGPIOx->OTYPER |= (u8Tmp << tmpPinNum);
 
 	  	  //3.- Configure pin speed
-	  	  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->OSPEEDR, MEMMAP_2B_CLEAN << (2u * pinNumTmp));
+	  	  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->OSPEEDR, MEMMAP_2B_CLEAN << (2u * tmpPinNum));
 	  	  u8Tmp = pGPIOHandle->GPIOx_pinCfg.oSpeed;
-	  	  pGPIOHandle->pGPIOx->OSPEEDR |= (u8Tmp << (2u*pinNumTmp));
+	  	  pGPIOHandle->pGPIOx->OSPEEDR |= (u8Tmp << (2u*tmpPinNum));
 
 	  	  if( pGPIOHandle->GPIOx_pinCfg.mode == ALTFN_MODE)
 	  	  {
@@ -66,19 +68,38 @@ void gpio_pinInit(gpio_handle_t const *pGPIOHandle)
 			  u8Tmp = pGPIOHandle->GPIOx_pinCfg.altFun;	/* Holds the AF selection value*/
 			  afTmp = (u8Tmp >> 0x3u) & 0x01; /* Holds MSB bit that means whether use 1:HIGH reg or 0:LOW reg */
 
-			  MEMMAP_CLEAN_BITFIELD( pGPIOHandle->pGPIOx->AFR[afTmp], MEMMAP_4B_CLEAN << (4u * (pinNumTmp&0x07u)));
+			  MEMMAP_CLEAN_BITFIELD( pGPIOHandle->pGPIOx->AFR[afTmp], MEMMAP_4B_CLEAN << (4u * (tmpPinNum&0x07u)));
 			  u8Tmp &= 0x07u; /* AFSEL from 0000 to 0111 otherwise are reserved*/
-			  pGPIOHandle->pGPIOx->AFR[afTmp] |= (u8Tmp << (4u* (pinNumTmp & 0x07u)));
+			  pGPIOHandle->pGPIOx->AFR[afTmp] |= (u8Tmp << (4u* (tmpPinNum & 0x07u)));
 	  	  }
 
 	    }
+	   /* External interrupt/ wakeup lines. */
+	   else if ( pGPIOHandle->GPIOx_pinCfg.mode == IN_IMR_MODE)
+	   {
+		   // - Enable the system configuration clock.
+		   RCC_SYSCF_CLK_EN();
+
+		   // - Selects the source input for the EXTIx external interrupt.
+		   syscfg_EXTI_Cfg(pGPIOHandle->pGPIOx, tmpPinNum);
+
+		   // - Configures the trigger selection.
+		   exti_triggerSel_Cfg(tmpPinNum, pGPIOHandle->GPIOx_pinCfg.trgSel);
+
+		   // - Configures the interrupt request from line x as masked.
+		   EXTI_IMR_EN(tmpPinNum);
+	   }
+	   else
+	   {
+		   /* No action required - Avoid MISRA. */
+	   }
 
 	    // 5.- Configure pin pull-up or pull-down.
 	    u8Tmp = pGPIOHandle->GPIOx_pinCfg.pupd;
 
 	    if( (u8Tmp == PUP) || (u8Tmp == PDOWN ))
 	    {
-	  	  pGPIOHandle->pGPIOx->PUPDR |= (u8Tmp << (2u*pinNumTmp));	
+	  	  pGPIOHandle->pGPIOx->PUPDR |= (u8Tmp << (2u*tmpPinNum));	
 	    };
   }
 }
