@@ -4,11 +4,17 @@
   * @author  Efren Del Real
   * @Date    January 9th 2021
   * @version V1.0
-  * @brief
+  * @brief   Nested Vectored Interrupt Controller (NVIC) registers.
   *
-  * NOTE:
+  * NOTE:    The code was wrote using below documentation.
+  *          - PM0223 programming manual by ST
+  *          - Cortex-M0+ Devices (Generic User Guide) by ARM
+  *          - r0p0 Cortex-M0 (Technical Reference Manual) by ARM
+  *          Please verify your correct documentation in order to modify the code
+  *          or get more information.
   ******************************************************************************
 */
+
 
 #ifndef CORDEX_M0_PLUS_NVIC_CORDEXM0P_NVIC_REGMAP_H_
 #define CORDEX_M0_PLUS_NVIC_CORDEXM0P_NVIC_REGMAP_H_
@@ -37,6 +43,7 @@ typedef struct
 /*Macro definition_______________________________________________________________*/
 /*
  * NVIC peripheral base address.
+ * Address: 0xE000E100-0xE000E4EF
  */
 #define NVIC_REGMAP		((nvic_regMap_t*)MEMMAP_M0P_NVIC_BASEADDR)
 

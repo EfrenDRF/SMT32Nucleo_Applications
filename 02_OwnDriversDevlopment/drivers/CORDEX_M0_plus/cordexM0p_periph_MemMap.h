@@ -4,9 +4,14 @@
   * @author  Efren Del Real
   * @Date    January 9th 2021
   * @version V1.0
-  * @brief
+  * @brief   Cordex-M0 plus core peripherals memory mapping.
   *
-  * NOTE:
+  * NOTE:    The code was wrote using below documentation.
+  *          - PM0223 programming manual by ST
+  *          - Cortex-M0+ Devices (Generic User Guide) by ARM
+  *          - r0p0 Cortex-M0 (Technical Reference Manual) by ARM
+  *          Please verify your correct documentation in order to modify the code
+  *          or get more information.
   ******************************************************************************
 */
 

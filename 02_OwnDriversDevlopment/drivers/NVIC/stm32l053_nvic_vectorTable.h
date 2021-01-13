@@ -4,7 +4,7 @@
   * @author  Efren Del Real
   * @Date    January 9th 2021
   * @version V1.0
-  * @brief
+  * @brief   Nested Vecoted Interrupt Controller (NVIC) Vector Table.
   *
   * NOTE: Below code was written using RM0367 reference manual. Please check your
   * correct reference manual to modify the code or get more information related.

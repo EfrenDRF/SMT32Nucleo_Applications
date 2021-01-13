@@ -32,6 +32,7 @@ typedef volatile uint32_t vuint32_t;
 #define MEMMAP_2B_CLEAN (0x03u)
 #define MEMMAP_3B_CLEAN (0x07u)
 #define MEMMAP_4B_CLEAN (0x0Fu)
+#define MEMMAP_8B_CLEAN (0xFFu)
 
 
 #define MEMMAP_SET_BITFIELD(REG,VALUE)      ( (REG) |= (VALUE))
@@ -43,6 +44,13 @@ typedef volatile uint32_t vuint32_t;
  * Program memory, data memory, registers and I/O ports
  * are organized within the same linear 4Gbyte address
  * space.
+ * 7) Device                        - 0xE010_0000 _ 0xFFFF_FFFF
+ * 6) Private peripheral bus        - 0xE000_0000 _ 0xE00F_FFFF
+ * 5) External device               - 0xA000_0000 _ 0xDFFF_FFFF
+ * 4) External RAM                  - 0x6000_0000 _ 0x9FFF_FFFF
+ * 3) Peripheral                    - 0x4000_0000 _ 0x5FFF_FFFF
+ * 2) SRAM                          - 0x2000_0000 _ 0x3FFF_FFFF
+ * 1) Code                          - 0x0000_0000 _ 0x1FFF_FFFF
  */
 
 /**Cortex-M0+ Peripherals=========================================================*/
