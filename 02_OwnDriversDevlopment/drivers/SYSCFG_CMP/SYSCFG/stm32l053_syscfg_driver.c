@@ -39,8 +39,8 @@
 void syscfg_EXTI_Cfg(const gpio_regMap_t * const pGPIOx, gpio_pinNum_t pinNum)
 {
 	syscfg_exti_t tmpSrcEXTIx = EXTI_PA;
-	uint8_t tmpEXTIx;
-	uint8_t tmpCfgr;
+	uint8_t tmpEXTIx = 0u;
+	uint8_t tmpCfgr = 0u;
 
 	// 1.- Selects the source input for the EXTIx external interrupt.
 	if (pGPIOx == GPIOA_REGMAP){tmpSrcEXTIx = EXTI_PA;}
@@ -55,10 +55,10 @@ void syscfg_EXTI_Cfg(const gpio_regMap_t * const pGPIOx, gpio_pinNum_t pinNum)
 	}
 
 	// 2.- Selects the EXTIx bits filed.
-	tmpEXTIx = (pinNum & 0x02u);
+	tmpEXTIx = (pinNum & 0x03u);
 
 	// 3.- Selects the external interrupt configuration register from 0 to 3
-	tmpCfgr = (pinNum >> 0x02u) & 0x02;
+	tmpCfgr = (pinNum >> 0x02u) & 0x03;
 
 	// 4.- Cleans the EXTIx bits field.
 	SYSCFG_REGMAP->EXTICR[tmpCfgr] &= ~ ( MEMMAP_4B_CLEAN << (4u * tmpEXTIx) );

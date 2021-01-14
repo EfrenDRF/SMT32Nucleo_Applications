@@ -34,22 +34,22 @@
  * @Note		-
  */
 
-void exti_triggerSel_Cfg(uint8_t line_x, exti_rtsr_t trgSel)
+void exti_triggerSel_Cfg(uint8_t line_x, exti_rtsr_t triggerSel)
 {
 
-	switch(trgSel)
+	switch(triggerSel)
 	{
-	case RTS:
+	case RISING_TRG_EN:
 		/* Rising trigger enabled (for Event and Interrupt) for input line x */
-		MEMMAP_CLEAN_BIT(EXTI_REGMAP->RTSR, line_x);
+		MEMMAP_CLEAN_BIT(EXTI_REGMAP->FTSR, line_x);
 		MEMMAP_SET_BIT(EXTI_REGMAP->RTSR, line_x);
 		break;
-	case FTS:
+	case FALLING_TRG_EN:
 		/* Falling trigger enabled (for Event and Interrupt) for input line x */
-		MEMMAP_CLEAN_BIT(EXTI_REGMAP->FTSR, line_x);
+		MEMMAP_CLEAN_BIT(EXTI_REGMAP->RTSR, line_x);
 		MEMMAP_SET_BIT(EXTI_REGMAP->FTSR, line_x);
 		break;
-	case RFTS:
+	case RISING_FALLING_TRG_EN:
 		/* Rising and falling edge triggers for input line x */
 		MEMMAP_SET_BIT(EXTI_REGMAP->RTSR, line_x);
 		MEMMAP_SET_BIT(EXTI_REGMAP->FTSR, line_x);
@@ -60,3 +60,34 @@ void exti_triggerSel_Cfg(uint8_t line_x, exti_rtsr_t trgSel)
 
 	}
 }
+
+
+/****************************************************************
+ * @fn			- exti_GetPendingSrcLine.
+ *
+ * @brief		- Reads pending interrupt flag on source line x.
+ *
+ * @param[in]	- line_x -trigger source line (22 .. 19 and
+ *                17 .. 0 are the available src lines)
+ *
+ *
+ * @return		- return non zero value whether the trigger request
+ *                ocurred.
+ *
+ * @Note		- This bit is set when the selected edge event
+ *                arrives on the interrupt line. This bit is cleared
+ *                by writing it to 1 (use EXTI_PR_CLEAN_LINEx()) or
+ *                by changing the sensitivity of the edge detector.
+ */
+
+uint8_t exti_GetPendingSrcLine(uint8_t line_x)
+{
+	uint8_t retValue =0u;
+
+	retValue =(uint8_t)((EXTI_REGMAP->PR >> line_x) & 1u);
+
+	return retValue;
+}
+
+
+

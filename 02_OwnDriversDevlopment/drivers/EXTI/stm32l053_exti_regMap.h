@@ -81,5 +81,7 @@ typedef struct
  * Address: 0x15
  * Reset value: undefined
  *=====================================================================*/
+#define EXTI_PR_CLEAN_LINEx(line_x)		MEMMAP_SET_BIT(EXTI_REGMAP->PR, line_x)
+
 
 #endif /* EXTI_STM32L053_EXTI_REGMAP_H_ */

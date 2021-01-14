@@ -46,7 +46,7 @@ void gpio_pinInit(gpio_handle_t const *pGPIOHandle)
   // 1.- Configure the pin mode
   MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->MODER, MEMMAP_2B_CLEAN << (2u * tmpPinNum));
   u8Tmp = pGPIOHandle->GPIOx_pinCfg.mode;
-  pGPIOHandle->pGPIOx->MODER |= (u8Tmp << (2u*tmpPinNum));
+  pGPIOHandle->pGPIOx->MODER |= ((3u & u8Tmp) << (2u*tmpPinNum));
 
   if(u8Tmp != ANALOG_MODE)
   {
@@ -84,7 +84,7 @@ void gpio_pinInit(gpio_handle_t const *pGPIOHandle)
 		   syscfg_EXTI_Cfg(pGPIOHandle->pGPIOx, tmpPinNum);
 
 		   // - Configures the trigger selection.
-		   exti_triggerSel_Cfg(tmpPinNum, pGPIOHandle->GPIOx_pinCfg.trgSel);
+		   exti_triggerSel_Cfg(tmpPinNum, pGPIOHandle->GPIOx_pinCfg.triggerSel);
 
 		   // - Configures the interrupt request from line x as masked.
 		   EXTI_IMR_EN(tmpPinNum);

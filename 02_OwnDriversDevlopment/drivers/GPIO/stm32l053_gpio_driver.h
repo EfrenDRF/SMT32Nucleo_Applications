@@ -137,7 +137,7 @@ typedef struct
 	gpio_ospeed_t oSpeed;		/* output speed cfg */
 	gpio_pupd_t pupd;			/* pull-up/pull-down cfg */
 	gpio_altfun_t altFun;		/* Alternate function selection 0 ..15 */
-	exti_rtsr_t trgSel;			/* Configure the trigger selection bits of the interrupt lines */
+	exti_rtsr_t triggerSel;		/* Configure the trigger selection bits of the interrupt lines */
 								/* Note: mode must be IN_IMR_MODE to config the hardware int*/
 }gpio_pinCfg_t;
 

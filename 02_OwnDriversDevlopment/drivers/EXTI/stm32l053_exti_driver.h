@@ -34,9 +34,9 @@ typedef enum
  */
 typedef enum
 {
-	RTS,	/* Rising trigger enabled (for Event and Interrupt) for input line x */
-	FTS,	/* Falling trigger enabled (for Event and Interrupt) for input line x */
-	RFTS	/* Rising and falling trigger enabled (for Event and Interrupt) for input line x*/
+	RISING_TRG_EN,			/* Rising trigger enabled (for Event and Interrupt) for input line x */
+	FALLING_TRG_EN,			/* Falling trigger enabled (for Event and Interrupt) for input line x */
+	RISING_FALLING_TRG_EN	/* Rising and falling trigger enabled (for Event and Interrupt) for input line x*/
 }exti_rtsr_t;
 
 
@@ -46,7 +46,7 @@ typedef enum
 typedef struct
 {
 	exti_imr_t	maskInt;		/* Configure the mask bits of the Interrupt lines */
-	exti_rtsr_t trgSel;			/* Configure the Trigger Selection bits of the Interrupt lines */
+	exti_rtsr_t triggerSel;		/* Configure the Trigger Selection bits of the Interrupt lines */
 }exti_hwintsel_t;
 /*Macro definition______________________________________________________________*/
 
@@ -60,7 +60,7 @@ typedef struct
 /*
  *
  */
-extern void exti_triggerSel_Cfg(uint8_t line_x, exti_rtsr_t trgSel);
-
+extern void exti_triggerSel_Cfg(uint8_t line_x, exti_rtsr_t triggerSel);
+extern uint8_t exti_GetPendingSrcLine(uint8_t line_x);
 
 #endif /* EXTI_STM32L053_EXTI_DRIVER_H_ */
