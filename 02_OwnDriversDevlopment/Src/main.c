@@ -15,7 +15,7 @@
 #include "stm32l053_exti_driver.h"
 #include "stm32l053_syscfg_driver.h"
 #include "cordexM0p_nvic_driver.h"
-
+#include "stm32l053_spi_driver.h"
 
 
 

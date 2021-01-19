@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32l053_spi_regMap..h
+  * @file    stm32l053_spi_regMap.h
   * @author  Efren Del Real
   * @Date    January 17th 2021
   * @version V1.0
