@@ -27,9 +27,27 @@
  */
 typedef enum
 {
-	_8BIT_LENGTH_DFF,    /*0: 8-bit data frame format is selected for transmission/reception*/
-	_16BIT__LENGTH_DFF   /*1: 16-bit data frame format is selected for transmission/reception*/
-}spi_ddf_t;
+	_8BIT_DFF,    /*0: 8-bit data frame format is selected for transmission/reception*/
+	_16BIT_DFF    /*1: 16-bit data frame format is selected for transmission/reception*/
+}spi_dff_t;
+
+/*
+ * Software slave management data type.
+ */
+typedef enum
+{
+	HW_NSS_MODE, /*0: Software slave management disabled - Hardware configured*/
+	SW_NSS_MODE  /*1: Software slave management enabled  - Software configured*/
+}spi_ssm_t;
+
+/*
+ * Frame format data type.
+ */
+typedef enum
+{
+	MSB_FIRST, /*0: MSB transmitted first*/
+	LSB_FIRST  /*1: LSB transmitted first*/
+}spi_ff_t;
 
 /*
  * Baud rate control data type.
@@ -46,15 +64,14 @@ typedef enum
 	FPCLK_DIV_256,  /*111: fPCLK/256*/
 }spi_br_t;
 
-
-
 /*
  * Master selection data type.
  */
 typedef enum
 {
-	SLAVE_CFG,  /*0: Slave configuration*/
-	MASTER_CFG  /*1: Master configuration*/
+	SLAVE_MODE,           /* 0: Slave configuration*/
+	MASTER_MODE,          /* 1: Master configuration*/
+	MULTIMASTER_MODE = 3  /*    Multimaster capability */
 }spi_mstr_t;
 
 /*
@@ -76,6 +93,14 @@ typedef enum
 }spi_cpha_t;
 
 
-
-
+/*
+ *
+ */
+typedef enum
+{
+	FULL_DUPLEX,       /*Full dupplex communication*/
+	HALF_DUPLEX,       /*Half dupplex communication*/
+	SIMPLEX_TX_ONLY,   /*Simplex Tx communication */
+	SIMPLEX_RX_ONLY    /*Simplex Rx communication*/
+}spi_commode_t;
 #endif /* COM_INF_SPI_I2S_SPI_STM32L053_SPI_TYPES_H_ */

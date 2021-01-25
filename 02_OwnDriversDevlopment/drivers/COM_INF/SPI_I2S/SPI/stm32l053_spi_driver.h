@@ -16,7 +16,7 @@
 
 
 /*Include header files____________________________________________________________*/
-#include "stm32l053_spi_regMap.h"
+#include "stm32l053_spii2s_regMap.h"
 #include "stm32l053_spi_types.h"
 
 /*typedef definition______________________________________________________________*/
@@ -26,11 +26,15 @@
  */
 typedef struct
 {
-	spi_ddf_t famelength;
-	spi_br_t baudrate;
-	spi_cpol_t cpol;
-	spi_cpha_t cpha;
-}spi_Cfg_t;
+	spi_mstr_t    devMode;     /*Device mode*/
+	spi_commode_t comMode;     /*Communication mode*/
+	spi_br_t      cbr;         /*Clock baud rate*/
+	spi_cpol_t    cpol;        /*Clock polarity*/
+	spi_cpha_t    cpha;        /*Clock phase*/
+	spi_ssm_t     ssm;         /*Software slave management*/
+	spi_ff_t      ff;          /*Frame format*/
+	spi_dff_t     dff;         /*Data frame format*/
+}spi_cfg_t;
 
 
 /*
@@ -39,7 +43,7 @@ typedef struct
 typedef struct
 {
 	spi_regMap_t * pSPIx;
-	spi_Cfg_t infCfg;
+	spi_cfg_t SPIcfg;
 }spi_handle_t;
 
 /*Macro definition________________________________________________________________*/
@@ -49,12 +53,12 @@ typedef struct
 /*=================================================================
  * APIs supported by SPI driver.
  *=================================================================*/
-void spi_Init(void);
+void spi_Init(spi_handle_t * pSPIhandle);
+void spi_PeriphCtrl(spi_regMap_t * const pSPIx, uint8_t control);
+void spi_SSICtrl(spi_regMap_t * const pSPIx, uint8_t control);
 
-
-
-void spi_sendData(void);
-void spi_receiveData(void);
+void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen);
+void spi_ReceiveData(void);
 
 
 #endif /* COM_INF_SPI_I2S_SPI_STM32L053_SPI_DRIVER_H_ */

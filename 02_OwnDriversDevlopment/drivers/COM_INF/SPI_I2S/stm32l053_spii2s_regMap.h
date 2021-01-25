@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32l053_spi_regMap.h
+  * @file    stm32l053_spii2s_regMap.h
   * @author  Efren Del Real
   * @Date    January 17th 2021
   * @version V1.0
@@ -12,8 +12,8 @@
   ******************************************************************************
 */
 
-#ifndef COM_INF_SPI_I2S_STM32L053_SPI_REGMAP_H_
-#define COM_INF_SPI_I2S_STM32L053_SPI_REGMAP_H_
+#ifndef COM_INF_SPI_I2S_STM32L053_SPII2S_REGMAP_H_
+#define COM_INF_SPI_I2S_STM32L053_SPII2S_REGMAP_H_
 
 /*Include header files____________________________________________________________*/
 #include "stm32l053_MemMap.h"
@@ -44,7 +44,7 @@ typedef struct
  * NOTE: SPI1 is handle by APB2 bus.
  *       SPI2 is handle by APB1 bus.
  *       +--------------+----------+----------+
- *       | SPI Feaures  |   SPI1   |   SPI2   |
+ *       | SPI Features |   SPI1   |   SPI2   |
  *       +--------------+----------+----------+
  *       | Hardware CRC |          |          |
  *       | calculation  |    X     |    X     |
@@ -60,6 +60,58 @@ typedef struct
 
 
 
+/*=====================================================================
+ * SPI control register 1 (SPI_CR1) (not used in I2S mode)
+ * Address: 0x00
+ * Reset value: 0x0000
+ *=====================================================================*/
+
+/** bit field position*/
+#define SPI_CR1_BIDIMODE_B   15u
+#define SPI_CR1_BIDIOE_B     14u
+#define SPI_CR1_CRCEN_B      13u
+#define SPI_CR1_CRCNEXT_B    12u
+#define SPI_CR1_DDF_B        11u
+#define SPI_CR1_RXONLY_B     10u
+#define SPI_CR1_SSM_B        9u
+#define SPI_CR1_SSI_B        8u
+#define SPI_CR1_LSBFIRST_B   7u
+#define SPI_CR1_SPE_B        6u
+#define SPI_CR1_BR_B         3u
+#define SPI_CR1_MSTR_B       2u
+#define SPI_CR1_CPOL_B       1u
+#define SPI_CR1_CPHA_B       0u
+
+/*=====================================================================
+ * SPI control register 2 (SPI_CR2)
+ * Address: 0x04
+ * Reset value: 0x0000
+ *=====================================================================*/
+#define SPI_CR2_TXEIE_B      7u
+#define SPI_CR2_RXNEIE_B     6u
+#define SPI_CR2_ERRIE_B      5u
+#define SPI_CR2_FRF_B        4u
+#define SPI_CR2_SSOE_B       2u
+#define SPI_CR2_TXDMAEN_B    1u
+#define SPI_CR2_RXDMAEN_B    0u
 
 
-#endif /* COM_INF_SPI_I2S_STM32L053_SPI_REGMAP_H_ */
+/*=====================================================================
+ * SPI status register (SPI_SR)
+ * Address: 0x08
+ * Reset value: 0x0000
+ *=====================================================================*/
+#define SPI_SR_FRE_B         8u
+#define SPI_SR_BSY_B         7U
+#define SPI_SR_OVR_B         6u
+#define SPI_SR_MODF_B        5u
+#define SPI_SR_CRCERR_B      4u
+#define SPI_SR_UDR_B         3u
+#define SPI_SR_CHSIDE_B      2u
+#define SPI_SR_TXE_B         1u
+#define SPI_SR_RXE_B         0u
+
+/** bit field position*/
+
+
+#endif /* COM_INF_SPI_I2S_STM32L053_SPII2S_REGMAP_H_ */
