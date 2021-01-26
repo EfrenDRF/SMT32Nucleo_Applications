@@ -4,7 +4,9 @@
   * @author  Efren Del Real
   * @Date    January 24th 2021
   * @version V1.0
-  * @brief   Application -
+  * @brief   Application - Arduino board is configured as SPI slave mode in order
+  *                        to be able to receive a message from Nucleo board and 
+  *                        display the SPI message into COM console.
   ******************************************************************************
 */
 
@@ -43,14 +45,14 @@ void setup()
 void loop() 
 {
 
-  // .- Execute whether the Rx data is received.
+  // .- Execute whether the Rx data is already received.
   if(boolRxDataFlag == true)
   {
     boolRxDataFlag = false;
     u8RxDataBuff[u8Index] = '\0';
   
     // .- Display Rx data in console.
-    Serial.print("Length:");
+    Serial.print("Length: ");
     Serial.println(u8DataLen);
     Serial.print("RxData: ");
     Serial.println((char*)u8RxDataBuff);
@@ -83,7 +85,7 @@ ISR (SPI_STC_vect)
   }
   else if((u8RxData & 0xC0) == 0xC0)
   {
-   u8sDataLen = u8RxData&0x3F;
+   u8sDataLen = u8RxData & 0x3F;
    u8DataLen  = u8sDataLen;
   }
   

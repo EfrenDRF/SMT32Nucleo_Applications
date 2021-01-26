@@ -4,7 +4,10 @@
   * @author  Efren Del Real
   * @Date    January 23th 2021
   * @version V1.0
-  * @brief   Application -
+  * @brief   Test - The code below was written to test the currently available
+  *                 SPI APIs (spi_Init and spi_SendData) using the emulator to
+  *                 to verify the SFR configuration and the logic analyzer to be
+  *                 able to watch the SPI frame message.
   ******************************************************************************
 */
 /*Include header files-------------------------*/
@@ -21,7 +24,7 @@ static void mySPI1_GPIO_Init(void);
 static void mySPI1_Init(void);
 
 /*Global variable declaration-----------------*/
-uint8_t myData[] = "viva Mexico!";
+uint8_t myData[] = "SPI APIs test";
 
 /*---------------------------------------------
  * Local function definition
@@ -53,6 +56,11 @@ int main(void)
 static void mySPI1_GPIO_Init(void)
 {
 	struct {
+		/* NOTE: Chip select pin (NSS) is not configured due to
+		 *       is configured in Software mode that means that
+		 *       SPI_CR1_SSI_B bit is set to 1.
+		 *
+		 */
 		gpio_handle_t SCK;   /*Arduino: D13 _ STM32: PA5*/
 		gpio_handle_t MOSI;  /*Arduino: D11 _ STM32: PA7*/
 	}SPI1pin;
@@ -87,7 +95,7 @@ static void mySPI1_Init(void)
 
 	SPI1Handle.pSPIx = SPI1_REGMAP;
 	SPI1Handle.SPIcfg.devMode = MASTER_MODE;
-	SPI1Handle.SPIcfg.comMode = FULL_DUPLEX;
+	SPI1Handle.SPIcfg.comMode = SIMPLEX_TX_ONLY;
 	SPI1Handle.SPIcfg.cbr     = FPCLK_DIV_8;
 	SPI1Handle.SPIcfg.cpol    = HIGH_IDLE_CLK;
 	SPI1Handle.SPIcfg.cpha    = RISING_EDGE_CLK;

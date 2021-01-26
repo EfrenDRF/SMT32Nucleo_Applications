@@ -91,20 +91,20 @@ void spi_Init(spi_handle_t * pSPIhandle)
 	// g) Configure the communication mode.
 	switch(pSPIhandle->SPIcfg.comMode)
 	{
-	case FULL_DUPLEX:
-	case SIMPLEX_TX_ONLY:
-		pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_BIDIMODE_B);
-		break;
-	case SIMPLEX_RX_ONLY:
-		pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_BIDIMODE_B);
-		pSPIhandle->pSPIx->CR1 |= (1u << SPI_CR1_RXONLY_B);
-		break;
-	case HALF_DUPLEX:
-		pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_RXONLY_B);
-		pSPIhandle->pSPIx->CR1 |= (1u << SPI_CR1_BIDIMODE_B);
-		break;
-	default:
-		break;
+		case FULL_DUPLEX:
+		case SIMPLEX_TX_ONLY:
+			pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_BIDIMODE_B);
+			break;
+		case SIMPLEX_RX_ONLY:
+			pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_BIDIMODE_B);
+			pSPIhandle->pSPIx->CR1 |= (1u << SPI_CR1_RXONLY_B);
+			break;
+		case HALF_DUPLEX:
+			pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_RXONLY_B);
+			pSPIhandle->pSPIx->CR1 |= (1u << SPI_CR1_BIDIMODE_B);
+			break;
+		default:
+			break;
 	};
 
 }
@@ -137,35 +137,6 @@ void spi_PeriphCtrl(spi_regMap_t * const pSPIx, uint8_t control)
 	}
 }
 
-/****************************************************************
- * @fn			- spi_SSICtrl.
- *
- * @brief		-
- *
- * @param[in]	-
- *
- * @return		- none.
- *
- * @Note		- none
- */
-void spi_SSICtrl(spi_regMap_t * const pSPIx, uint8_t control)
-{
-
-	if( (pSPIx->CR1 & (1u << SPI_CR1_SSM_B)) != 0u)
-	{
-		if(control == MEMMAP_BIT_SET)
-		{
-			pSPIx->CR1 |= (1u << SPI_CR1_SSI_B);
-		}
-		else
-		{
-			pSPIx->CR1 &= ~(1u << SPI_CR1_SSI_B);
-		}
-	}
-
-}
-
-
 
 /****************************************************************
  * @fn			- spi_SendData.
@@ -184,7 +155,6 @@ void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
 
 	while(u8TmpLen > 0u)
 	{
-
 		// Wait until Tx buffer flag is set
 		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_TXE_B) == MEMMAP_BIT_CLEAN);
 
