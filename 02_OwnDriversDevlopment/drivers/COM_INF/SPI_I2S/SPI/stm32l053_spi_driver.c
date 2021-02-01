@@ -155,20 +155,24 @@ void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
 
 	while(u8TmpLen > 0u)
 	{
-		// Wait until Tx buffer flag is set
+		// .- Wait until TXE flag (Tx buffer empty) is set.
 		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_TXE_B) == MEMMAP_BIT_CLEAN);
 
-
-		// Data Frame Format
+		/*
+		 * It indicates that the internal Tx buffer is ready to be loaded
+		 * with the next data.
+		 *
+		 * Clearing the TXE flag is performed by writing to the SPI_DR register.
+		 */
 		if( (pSPIx->CR1 & (1u << SPI_CR1_DDF_B)) == 0u )
 		{
-			// 8 bits Data Frame Format.
+			// .- 8 bits Data Frame Format.
 			pSPIx->DR = pData[uLen-u8TmpLen];
 			u8TmpLen--;
 		}
 		else
 		{
-			// 16 bits Data Frame Format.
+			// .- 16 bits Data Frame Format.
 			pSPIx->DR = (uint16_t)(*(uint16_t*)&pData[uLen-u8TmpLen]);
 			u8TmpLen-= 2;
 		}
@@ -176,3 +180,51 @@ void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
 	}
 
 }
+
+/****************************************************************
+ * @fn			- spi_ReceiveData.
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		- none.
+ *
+ * @Note		- none
+ */
+void spi_ReceiveData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
+{
+	uint8_t u8TmpLen = uLen;
+
+	while(u8TmpLen > 0u)
+	{
+		// .- Wait until RXNE flag (Rx buffer not empty) is set.
+		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_RXE_B) == MEMMAP_BIT_CLEAN);
+
+
+		/*
+		 * Data are ready to read from the SPI_DR register.
+		 *
+		 * Clearing the RXNE bit is performed by reading
+		 * SPI_DR register.
+		 */
+
+		if( (pSPIx->CR1 & (1u << SPI_CR1_DDF_B)) == 0u )
+		{
+			// .- 8 bits Data Frame Format.
+			pData[uLen-u8TmpLen] = *(uint8_t*)&(pSPIx->DR);
+			u8TmpLen--;
+		}
+		else
+		{
+			// .- 16 bits Data Frame Format.
+			*(uint16_t*)&pData[uLen-u8TmpLen] = *(uint16_t*)&(pSPIx->DR);
+			u8TmpLen-= 2;
+		}
+
+	}
+
+}
+
+
+/****************************END OF FILE *******************************************/
