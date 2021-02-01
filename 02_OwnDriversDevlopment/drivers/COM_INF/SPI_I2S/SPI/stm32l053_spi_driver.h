@@ -57,7 +57,7 @@ void spi_Init(spi_handle_t * pSPIhandle);
 void spi_PeriphCtrl(spi_regMap_t * const pSPIx, uint8_t control);
 
 void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen);
-void spi_ReceiveData(void);
+void spi_ReceiveData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen);
 
 
 #endif /* COM_INF_SPI_I2S_SPI_STM32L053_SPI_DRIVER_H_ */
