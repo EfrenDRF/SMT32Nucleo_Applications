@@ -66,21 +66,21 @@ typedef struct
  *=====================================================================*/
 
 /** bit field position*/
-#define RCC_BITFP_PLLRDY		25u
-#define RCC_BITFP_PLLON			24u
-#define RCC_BITFP_RTCPRE		20u
-#define RCC_BITFP_CSSHSEON		19u
-#define RCC_BITFP_HSEBYP		18u
-#define RCC_BITFP_HSERDY		17u
-#define RCC_BITFP_HSEON			16u
-#define RCC_BITFP_MSIRDY		9u
-#define RCC_BITFP_MSION			8u
-#define RCC_BITFP_HSI16OUTEN	5u
-#define RCC_BITFP_HSI16DIVF		4u
-#define RCC_BITFP_HSI16DIVEN	3u
-#define RCC_BITFP_HSI16RDYF		2u
-#define RCC_BITFP_HSI16KERON	1u
-#define RCC_BITFP_HSI16ON		0u
+#define RCC_CR_PLLRDY_B        25u
+#define RCC_CR_PLLON_B         24u
+#define RCC_CR_RTCPRE_B        20u
+#define RCC_CR_CSSHSEON_B      19u
+#define RCC_CR_HSEBYP_B        18u
+#define RCC_CR_HSERDY_B        17u
+#define RCC_CR_HSEON_B         16u
+#define RCC_CR_MSIRDY_B         9u
+#define RCC_CR_MSION_B          8u
+#define RCC_CR_HSI16OUTEN_B     5u
+#define RCC_CR_HSI16DIVF_B      4u
+#define RCC_CR_HSI16DIVEN_B     3u
+#define RCC_CR_HSI16RDYF_B      2u
+#define RCC_CR_HSI16KERON_B     1u
+#define RCC_CR_HSI16ON_B        0u
 
 /*=====================================================================
  * Internal clock sources calibration register (RCC_ICSCR)
@@ -89,11 +89,11 @@ typedef struct
  *=====================================================================*/
 
 /** bit field position*/
-#define RCC_BITFP_MSITRIM		24u
-#define RCC_BITFP_MSICAL		16u
-#define RCC_BITFP_MSIRANGE		13u
-#define RCC_BITFP_HSI16TRIM		8u
-#define RCC_BITFP_HSI16CAL		0u
+#define RCC_ICSCR_MSITRIM_B     24u
+#define RCC_ICSCR_MSICAL_B      16u
+#define RCC_ICSCR_MSIRANGE_B    13u
+#define RCC_ICSCR_HSI16TRIM_B    8u
+#define RCC_ICSCR_HSI16CA_B      0u
 
 
 /*=====================================================================
@@ -101,135 +101,94 @@ typedef struct
  * Address offset: 0x0C
  * Reset value: 0x0000 0000
  *=====================================================================*/
-#define RCC_BITFP_MCOPRE		28u
-#define RCC_BITFP_MCOSEL		24u
-#define RCC_BITFP_PLLDIV		22u
-#define RCC_BITFP_PLLMUL		18u
-#define RCC_BITFP_PLLSRC		16u
-#define RCC_BITFP_STOPWUCK		15u
-#define RCC_BITFP_PPRE2			11u
-#define RCC_BITFP_PPRE1			8u
-#define RCC_BITFP_HPRE			4u
-#define RCC_BITFP_SWS			2u
-#define RCC_BITFP_SW			0u
+#define RCC_CFGR_MCOPRE_B       28u
+#define RCC_CFGR_MCOSEL_B       24u
+#define RCC_CFGR_PLLDIV_B       22u
+#define RCC_CFGR_PLLMUL_B       18u
+#define RCC_CFGR_PLLSRC_B       16u
+#define RCC_CFGR_STOPWUCK_B     15u
+#define RCC_CFGR_PPRE2_B        11u
+#define RCC_CFGR_PPRE1_B         8u
+#define RCC_CFGR_HPRE_B          4u
+#define RCC_CFGR_SWS_B           2u
+#define RCC_CFGR_SW_B            0u
 
 /*=====================================================================
  * GPIO clock enable register (RCC_IOPENR)
  * Address: 0x2C
  * Reset value: 0x0000 0000
  *=====================================================================*/
-
-/** GPIO port x clock enabled macros*/
-#define RCC_IOPH_CLK_EN()		MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, 7u)
-#define RCC_IOPE_CLK_EN()		MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, 4u)
-#define RCC_IOPD_CLK_EN()		MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, 3u)
-#define RCC_IOPC_CLK_EN()		MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, 2u)
-#define RCC_IOPB_CLK_EN()		MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, 1u)
-#define RCC_IOPA_CLK_EN()		MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, 0u)
-
-/** GPIO port x clock disabled macros */
-#define RCC_IOPH_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, 7u)
-#define RCC_IOPE_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, 4u)
-#define RCC_IOPD_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, 3u)
-#define RCC_IOPC_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, 2u)
-#define RCC_IOPB_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, 1u)
-#define RCC_IOPA_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, 0u)
-
+#define RCC_IOPENR_IOPHEN_B     7u
+#define RCC_IOPENR_IOPEEN_B     4u
+#define RCC_IOPENR_IOPDEN_B     3u
+#define RCC_IOPENR_IOPCEN_B     2u
+#define RCC_IOPENR_IOPBEN_B     1u
+#define RCC_IOPENR_IOPAEN_B     0u
 
 /*=====================================================================
  * AHB peripheral clock enable register (RCC_AHBENR)
  * Address: 0x30
  * Reset value: 0x0000 0100
  *=====================================================================*/
-/** AHB's peripherals clock enabled macros */
-#define RCC_CRYP_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, 24u)
-#define RCC_RGN_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, 20u)
-#define RCC_TSC_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, 16u)
-#define RCC_CRC_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, 12u)
-#define RCC_MIF_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, 8u)
-#define RCC_DMA_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, 0u)
-
-/** AHB's peripherals clock disabled macros */
-#define RCC_CRYP_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, 24u)
-#define RCC_RGN_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, 20u)
-#define RCC_TSC_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, 16u)
-#define RCC_CRC_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, 12u)
-#define RCC_MIF_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, 8u)
-#define RCC_DMA_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, 0u)
-
+#define RCC_AHBENR_CRYPEN_B       24u
+#define RCC_AHBENR_RNGEN_B        20u
+#define RCC_AHBENR_TSCEN_B        16u
+#define RCC_AHBENR_CRCEN_B        12u
+#define RCC_AHBENR_MIFEN_B         8u
+#define RCC_AHBENR_DMAEN_B         0u
 
 /*=====================================================================
  * APB2 peripheral clock enable register (RCC_APB2ENR)
  * Address: 0x34
  * Reset value: 0x0000 0000
  *=====================================================================*/
-/** APB2's peripherals clock enabled macros */
-#define RCC_DBG_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, 22u)
-#define RCC_USART1_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, 14u)
-#define RCC_SPI1_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, 12u)
-#define RCC_ADC_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, 9u)
-#define RCC_FW_CLK_EN()			MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, 7u)
-#define RCC_TIM22_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, 5u)
-#define RCC_TIM21_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, 2u)
-#define RCC_SYSCF_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, 0u)
-
-
-/** APB2's peripherals clock disabled macros */
-#define RCC_DBG_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, 22u)
-#define RCC_USART1_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, 14u)
-#define RCC_SPI1_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, 12u)
-#define RCC_ADC_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, 9u)
-#define RCC_FW_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, 7u)
-#define RCC_TIM22_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, 5u)
-#define RCC_TIM21_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, 2u)
-#define RCC_SYSCF_CLK_DSBL()	MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, 0u)
+#define RCC_APB2ENR_DBGEN_B        22u
+#define RCC_APB2ENR_USART1EN_B     14u
+#define RCC_APB2ENR_SPI1EN_B       12u
+#define RCC_APB2ENR_ADCEN_B         9u
+#define RCC_APB2ENR_FWEN_B          7u
+#define RCC_APB2ENR_TIM22EN_B       5u
+#define RCC_APB2ENR_TIM21EN_B       2u
+#define RCC_APB2ENR_SYSCFGEN_B      0u
 
 /*=====================================================================
  * APB1 peripheral clock enable register (RCC_APB1ENR)
  * Address: 0x38
  * Reset value: 0x0000 0000
  *=====================================================================*/
-/** APB1's peripherals clock enabled macros */
-#define RCC_LPTIM1_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 31u)
-#define RCC_I2C3_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 30u)
-#define RCC_DAC_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 29u)
-#define RCC_PWR_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 28u)
-#define RCC_CRS_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 27u)
-#define RCC_USB_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 23u)
-#define RCC_I2C2_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 22u)
-#define RCC_I2C1_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 21u)
-#define RCC_USART5_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 20u)
-#define RCC_USART4_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 19u)
-#define RCC_LPUART1_CLK_EN()	MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 18u)
-#define RCC_USART2_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 17u)
-#define RCC_SPI2_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 14u)
-#define RCC_WWDG_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 11u)
-#define RCC_LCD_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 9u)
-#define RCC_TIM7_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 5u)
-#define RCC_TIM6_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 4u)
-#define RCC_TIM3_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 1u)
-#define RCC_TIM2_CLK_EN()		MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, 0u)
+#define RCC_APB1ENR_LPTIM1EN_B       31u
+#define RCC_APB1ENR_I2C3EN_B         30u
+#define RCC_APB1ENR_DACEN_B          29u
+#define RCC_APB1ENR_PWREN_B          28u
+#define RCC_APB1ENR_CRSEN_B          27u
+#define RCC_APB1ENR_USBEN_B          23u
+#define RCC_APB1ENR_I2C2EN_B         22u
+#define RCC_APB1ENR_I2C1EN_B         21u
+#define RCC_APB1ENR_USART5EN_B       20u
+#define RCC_APB1ENR_USART4EN_B       19u
+#define RCC_APB1ENR_LPUART1EN_B      18u
+#define RCC_APB1ENR_USART2EN_B       17u
+#define RCC_APB1ENR_SPI2EN_B         14u
+#define RCC_APB1ENR_WWDGEN_B         11u
+#define RCC_APB1ENR_LCDEN_B           9u
+#define RCC_APB1ENR_TIM7EN_B          5u
+#define RCC_APB1ENR_TIM6EN_B          4u
+#define RCC_APB1ENR_TIM3EN_B          1u
+#define RCC_APB1ENR_TIM2EN_B          0u
 
-/** APB1's peripherals clock disabled macros */
-#define RCC_LPTIM1_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 31u)
-#define RCC_I2C3_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 30u)
-#define RCC_DAC_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 29u)
-#define RCC_PWR_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 28u)
-#define RCC_CRS_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 27u)
-#define RCC_USB_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 23u)
-#define RCC_I2C2_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 22u)
-#define RCC_I2C1_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 21u)
-#define RCC_USART5_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 20u)
-#define RCC_USART4_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 19u)
-#define RCC_LPUART1_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 18u)
-#define RCC_USART2_CLK_DSBL()		MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 17u)
-#define RCC_SPI2_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 14u)
-#define RCC_WWDG_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 11u)
-#define RCC_LCD_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 9u)
-#define RCC_TIM7_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 5u)
-#define RCC_TIM6_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 4u)
-#define RCC_TIM3_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 1u)
-#define RCC_TIM2_CLK_DSBL()			MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, 0u)
+/*=====================================================================
+ * Clock configuration register (RCC_CCIPR)
+ * Address offset: 0x4C
+ * Reset value: 0x0000 0000
+ *=====================================================================*/
+#define RCC_CCIPR_HSI48SEL_B      26u
+#define RCC_CCIPR_LPTIM1SEL_B     18u
+#define RCC_CCIPR_I2C3SEL_B       16u
+#define RCC_CCIPR_I2C2SEL_B       12u
+#define RCC_CCIPR_I2C1SEL_B       10u
+#define RCC_CCIPR_USART2SEL_B      2u
+#define RCC_CCIPR_USART1SEL_B      0u
+
 
 
 

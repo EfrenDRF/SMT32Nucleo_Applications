@@ -18,6 +18,7 @@
 /*Include header files____________________________________________________________*/
 #include "stm32l053_i2c_regMap.h"
 #include "stm32l053_i2c_types.h"
+#include "stm32l053_rcc_types.h"
 
 /*typedef definition______________________________________________________________*/
 
@@ -26,7 +27,7 @@
  */
 typedef struct
 {
-	uint8_t noUsed;
+	rcc_i2cxsel_t rccI2CclkSrc; /*I2C clock source selection*/
 
 }i2c_cfg_t;
 
@@ -35,11 +36,11 @@ typedef struct
  */
 typedef struct
 {
-	i2c_regMap_t * pI2Cx;
-	i2c_cfg_t      I2Ccfg;
+	i2c_regMap_t * i2cRegPtr;
+	i2c_cfg_t      i2cCfg;
 }i2c_handle_t;
 
-void i2c_Init(i2c_handle_t * pI2Chandle);
+void i2c_Init(i2c_handle_t * i2cHandlePtr);
 
 
 #endif /* COM_INF_I2C_STM32L053_I2C_DRIVER_H_ */

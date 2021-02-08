@@ -14,7 +14,7 @@
 
 /*Include header files____________________________________________________________*/
 #include "stm32l053_gpio_driver.h"
-#include "stm32l053_rcc_regMap.h"
+#include "stm32l053_rcc_driver.h"
 
 /*Macro definition_________________________________________________________________*/
 

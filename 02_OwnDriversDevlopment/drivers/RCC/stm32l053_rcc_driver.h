@@ -4,10 +4,14 @@
   * @author  Efren Del Real
   * @Date    January 3rd 2021
   * @version V1.0
-  * @brief   Reset and clock control driver
+  * @Date    February 7th 2021
+  *          V1.1 - Data types moved to stm32l053_rxx_types.h file.
+  *
+  * @brief   Reset and clock control - driver
   *
   * NOTE: Below code was written using RM0367 reference manual. Please check your
-  * correct reference manual to modify the code or get more information related.
+  *       correct reference manual to modify the code or get more information
+  *       related.
   ******************************************************************************/
 
 #ifndef RCC_STM32L053_RCC_DRIVER_H_
@@ -15,53 +19,131 @@
 
 /*Include header files____________________________________________________________*/
 #include "stm32l053_rcc_regMap.h"
+#include "stm32l053_rcc_types.h"
 
 /*typedef definition______________________________________________________________*/
 
-/*
- * MSI frequency ranges available
- */
-typedef enum
-{
-	RG0_65kHz,		/* 000: range 0 around 65.536 kHz */
-	RG1_131kHz,		/* 001: range 1 around 131.072 kHz */
-	RG2_262kHz,		/* 010: range 2 around 262.144 kHz */
-	RG3_524kHz,		/* 011: range 3 around 524.288 kHz */
-	RG4_1MHz,		/* 100: range 4 around 1.048 MHz */
-	RG5_2MHz,		/* 101: range 5 around 2.097 MHz (reset value) */
-	RG6_4MHz		/* 110: range 6 around 4.194 MHz */
-}rcc_msirange_t;
-
-
-/*
- *  Microcontroller clock output prescaler
- */
-typedef enum
-{
-	MCO_DIV_1,	/* 000: MCO is divided by 1 */
-	MCO_DIV_2,	/* 001: MCO is divided by 2 */
-	MCO_DIV_4,	/* 010: MCO is divided by 4 */
-	MCO_DIV_8,	/* 011: MCO is divided by 8 */
-	MCO_DIV_16	/* 100: MCO is divided by 16 */
-}rcc_mcopre_t;
-
-/*
- *  Microcontroller clock output selection
- */
-typedef enum
-{
-	MCO_OUT_DSBL,		/* 0000: MCO output disabled, no clock on MCO*/
-	MCO_OUT_SYSCLK,		/* 0001: SYSCLK clock selected*/
-	MCO_OUT_HSI16,		/* 0010: HSI16 oscillator clock selected*/
-	MCO_OUT_HSE,		/* 0011: MSI oscillator clock selected*/
-	MCO_OUT_PLL,		/* 0100: HSE oscillator clock selected*/
-	MCO_OUT_LSI,		/* 0101: PLL clock selected*/
-	MCO_OUT_LSE,		/* 0110: LSI oscillator clock selected*/
-	MCO_OUT_HSI48		/* 0111: LSE oscillator clock selected*/
-}rcc_mcosel_t;
-
-
-
 /*Macro definition_________________________________________________________________*/
+#define RCC_OK      0u
+#define RCC_NOTOK   1u
+
+#define RCC_CLK_EN   0u
+#define RCC_CLK_DSBL 1u
+
+/*=====================================================================
+ * GPIO clock enable register (RCC_IOPENR) - Macros
+ * Address: 0x2C
+ *=====================================================================*/
+/** GPIO port x clock enabled macros*/
+#define RCC_IOPH_CLK_EN()       MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, RCC_IOPENR_IOPHEN_B)
+#define RCC_IOPE_CLK_EN()       MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, RCC_IOPENR_IOPEEN_B)
+#define RCC_IOPD_CLK_EN()       MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, RCC_IOPENR_IOPDEN_B)
+#define RCC_IOPC_CLK_EN()       MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, RCC_IOPENR_IOPCEN_B)
+#define RCC_IOPB_CLK_EN()       MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, RCC_IOPENR_IOPBEN_B)
+#define RCC_IOPA_CLK_EN()       MEMMAP_SET_BIT( RCC_REGMAP->IOPENR, RCC_IOPENR_IOPAEN_B)
+
+/** GPIO port x clock disabled macros */
+#define RCC_IOPH_CLK_DSBL()     MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, RCC_IOPENR_IOPHEN_B)
+#define RCC_IOPE_CLK_DSBL()     MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, RCC_IOPENR_IOPEEN_B)
+#define RCC_IOPD_CLK_DSBL()     MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, RCC_IOPENR_IOPDEN_B)
+#define RCC_IOPC_CLK_DSBL()     MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, RCC_IOPENR_IOPCEN_B)
+#define RCC_IOPB_CLK_DSBL()     MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, RCC_IOPENR_IOPBEN_B)
+#define RCC_IOPA_CLK_DSBL()     MEMMAP_CLEAN_BIT(RCC_REGMAP->IOPENR, RCC_IOPENR_IOPAEN_B)
+
+
+/*=====================================================================
+ * AHB peripheral clock enable register (RCC_AHBENR) - Macros
+ * Address: 0x30
+ *=====================================================================*/
+/** AHB's peripherals clock enabled macros */
+#define RCC_CRYP_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_CRYPEN_B)
+#define RCC_RGN_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_RNGEN_B)
+#define RCC_TSC_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_TSCEN_B)
+#define RCC_CRC_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_CRCEN_B)
+#define RCC_MIF_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_MIFEN_B)
+#define RCC_DMA_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_DMAEN_B)
+
+/** AHB's peripherals clock disabled macros */
+#define RCC_CRYP_CLK_DSBL()     MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_CRYPEN_B)
+#define RCC_RGN_CLK_DSBL()      MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_RNGEN_B)
+#define RCC_TSC_CLK_DSBL()      MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_TSCEN_B)
+#define RCC_CRC_CLK_DSBL()      MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_CRCEN_B)
+#define RCC_MIF_CLK_DSBL()      MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_MIFEN_B)
+#define RCC_DMA_CLK_DSBL()      MEMMAP_CLEAN_BIT(RCC_REGMAP->AHBENR, RCC_AHBENR_DMAEN_B)
+
+
+/*=====================================================================
+ * APB2 peripheral clock enable register (RCC_APB2ENR) -Macros
+ * Address: 0x34
+ *=====================================================================*/
+/** APB2's peripherals clock enabled macros */
+#define RCC_DBG_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_DBGEN_B)
+#define RCC_USART1_CLK_EN()     MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_USART1EN_B)
+#define RCC_SPI1_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_SPI1EN_B)
+#define RCC_ADC_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_ADCEN_B)
+#define RCC_FW_CLK_EN()         MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_FWEN_B)
+#define RCC_TIM22_CLK_EN()      MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_TIM22EN_B)
+#define RCC_TIM21_CLK_EN()      MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_TIM21EN_B)
+#define RCC_SYSCF_CLK_EN()      MEMMAP_SET_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_SYSCFGEN_B)
+
+
+/** APB2's peripherals clock disabled macros */
+#define RCC_DBG_CLK_DSBL()      MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_DBGEN_B)
+#define RCC_USART1_CLK_DSBL()   MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_USART1EN_B)
+#define RCC_SPI1_CLK_DSBL()     MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_SPI1EN_B)
+#define RCC_ADC_CLK_DSBL()      MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_ADCEN_B)
+#define RCC_FW_CLK_DSBL()       MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_FWEN_B)
+#define RCC_TIM22_CLK_DSBL()    MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_TIM22EN_B)
+#define RCC_TIM21_CLK_DSBL()    MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_TIM21EN_B)
+#define RCC_SYSCF_CLK_DSBL()    MEMMAP_CLEAN_BIT(RCC_REGMAP->APB2ENR, RCC_APB2ENR_SYSCFGEN_B)
+
+/*=====================================================================
+ * APB1 peripheral clock enable register (RCC_APB1ENR) - Macros
+ * Address: 0x38
+ *=====================================================================*/
+/** APB1's peripherals clock enabled macros */
+#define RCC_LPTIM1_CLK_EN()     MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_LPTIM1EN_B)
+#define RCC_I2C3_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_I2C3EN_B)
+#define RCC_DAC_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_DACEN_B)
+#define RCC_PWR_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_PWREN_B)
+#define RCC_CRS_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_CRSEN_B)
+#define RCC_USB_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_USBEN_B)
+#define RCC_I2C2_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_I2C2EN_B)
+#define RCC_I2C1_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_I2C1EN_B)
+#define RCC_USART5_CLK_EN()     MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_USART5EN_B)
+#define RCC_USART4_CLK_EN()     MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_USART4EN_B)
+#define RCC_LPUART1_CLK_EN()    MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_LPUART1EN_B)
+#define RCC_USART2_CLK_EN()     MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_USART2EN_B)
+#define RCC_SPI2_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_SPI2EN_B)
+#define RCC_WWDG_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_WWDGEN_B)
+#define RCC_LCD_CLK_EN()        MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_LCDEN_B)
+#define RCC_TIM7_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM7EN_B)
+#define RCC_TIM6_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM6EN_B)
+#define RCC_TIM3_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM3EN_B)
+#define RCC_TIM2_CLK_EN()       MEMMAP_SET_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM2EN_B)
+
+/** APB1's peripherals clock disabled macros */
+#define RCC_LPTIM1_CLK_DSBL()       MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_LPTIM1EN_B)
+#define RCC_I2C3_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_I2C3EN_B)
+#define RCC_DAC_CLK_DSBL()          MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_DACEN_B)
+#define RCC_PWR_CLK_DSBL()          MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_PWREN_B)
+#define RCC_CRS_CLK_DSBL()          MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_CRSEN_B)
+#define RCC_USB_CLK_DSBL()          MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_USBEN_B)
+#define RCC_I2C2_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_I2C2EN_B)
+#define RCC_I2C1_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_I2C1EN_B)
+#define RCC_USART5_CLK_DSBL()       MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_USART5EN_B)
+#define RCC_USART4_CLK_DSBL()       MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_USART4EN_B)
+#define RCC_LPUART1_CLK_DSBL()      MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_LPUART1EN_B)
+#define RCC_USART2_CLK_DSBL()       MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_USART2EN_B)
+#define RCC_SPI2_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_SPI2EN_B)
+#define RCC_WWDG_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_WWDGEN_B)
+#define RCC_LCD_CLK_DSBL()          MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_LCDEN_B)
+#define RCC_TIM7_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM7EN_B)
+#define RCC_TIM6_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM6EN_B)
+#define RCC_TIM3_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM3EN_B)
+#define RCC_TIM2_CLK_DSBL()         MEMMAP_CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM2EN_B)
+
+/*Global function declaration______________________________________________________*/
+extern uint8_t rcc_I2CxClkSrc(rcc_i2cxsel_t clkSrc, uint8_t i2cxBit);
 
 #endif /* RCC_STM32L053_RCC_DRIVER_H_ */
