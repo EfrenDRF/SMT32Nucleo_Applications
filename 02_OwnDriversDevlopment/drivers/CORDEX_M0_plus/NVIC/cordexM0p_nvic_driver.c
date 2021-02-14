@@ -47,7 +47,7 @@
  */
 void nvic_EnableIRQ(nvic_IRQn_t IRQn)
 {
-	MEMMAP_SET_BIT(NVIC_REGMAP->ISER ,NVIC_MAX_IRQn(IRQn));
+	SET_BIT(NVIC_REGMAP->ISER ,NVIC_MAX_IRQn(IRQn));
 }
 
 /****************************************************************
@@ -71,7 +71,7 @@ void nvic_EnableIRQ(nvic_IRQn_t IRQn)
  */
 void nvic_DisableIRQ(nvic_IRQn_t IRQn)
 {
-	MEMMAP_SET_BIT(NVIC_REGMAP->ICER ,NVIC_MAX_IRQn(IRQn));
+	SET_BIT(NVIC_REGMAP->ICER ,NVIC_MAX_IRQn(IRQn));
 }
 
 /****************************************************************
@@ -119,7 +119,7 @@ uint8_t nvic_GetPendingIRQ (nvic_IRQn_t IRQn)
  */
 void nvic_SetPendingIRQ (nvic_IRQn_t IRQn)
 {
-	MEMMAP_SET_BIT(NVIC_REGMAP->ISPR ,NVIC_MAX_IRQn(IRQn));
+	SET_BIT(NVIC_REGMAP->ISPR ,NVIC_MAX_IRQn(IRQn));
 }
 
 /****************************************************************
@@ -144,7 +144,7 @@ void nvic_SetPendingIRQ (nvic_IRQn_t IRQn)
  */
 void nvic_ClearPendingIRQ (nvic_IRQn_t IRQn)
 {
-	MEMMAP_SET_BIT(NVIC_REGMAP->ICPR ,NVIC_MAX_IRQn(IRQn));
+	SET_BIT(NVIC_REGMAP->ICPR ,NVIC_MAX_IRQn(IRQn));
 }
 
 /****************************************************************
@@ -171,7 +171,7 @@ void nvic_SetPriority (nvic_IRQn_t IRQn, nvic_pri_t priority)
 	tmpPRI_x = (IRQn & 0x3u);         /* Selects priority field.*/
 
 	/*Cleans the PRIx field.*/
-	NVIC_REGMAP->IPR[tmpIPRn] &= ~(MEMMAP_8B_CLEAN << (8u*tmpPRI_x));
+	NVIC_REGMAP->IPR[tmpIPRn] &= ~(CLEAN_8B << (8u*tmpPRI_x));
 
 	/* Sets bits [7:6] to the corresponding Priority field and register.*/
 	NVIC_REGMAP->IPR[tmpIPRn] |= ((priority &0xFFu) << (8u*tmpPRI_x));

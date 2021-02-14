@@ -34,45 +34,45 @@ void myGPIO_Init(void)
 	memset(&SPI1pin, 0u, sizeof(SPI1pin));
 
     // .- Chip Select pin config.
-	SPI1pin.NSS.pGPIOx = GPIOA_REGMAP;
-	SPI1pin.NSS.GPIOx_pinCfg.pinNumber = PIN_4;
-	SPI1pin.NSS.GPIOx_pinCfg.mode      = ALTFN_MODE;
-	SPI1pin.NSS.GPIOx_pinCfg.oType     = OUT_PUSH_PULL;
-	SPI1pin.NSS.GPIOx_pinCfg.pupd      = NO_PUP_PDOWN;
-	SPI1pin.NSS.GPIOx_pinCfg.altFun    = AFSEL_0;
+	SPI1pin.NSS.gpioRegPtr = GPIOA_REGMAP;
+	SPI1pin.NSS.gpioPinCfg.gpioPinNum = PIN_4;
+	SPI1pin.NSS.gpioPinCfg.gpioPinMode      = ALTFN_MODE;
+	SPI1pin.NSS.gpioPinCfg.gpioPinOutType     = OUT_PUSH_PULL;
+	SPI1pin.NSS.gpioPinCfg.gpioPinPuPd      = NO_PULL_UP_PULL_DOWN;
+	SPI1pin.NSS.gpioPinCfg.gpioPinAltFun    = ALT_FUN_0;
 
 	// .- Clock pin config
-	SPI1pin.SCK.pGPIOx = GPIOA_REGMAP;
-	SPI1pin.SCK.GPIOx_pinCfg.pinNumber = PIN_5;
-	SPI1pin.SCK.GPIOx_pinCfg.mode      = ALTFN_MODE;
-	SPI1pin.SCK.GPIOx_pinCfg.oType     = OUT_PUSH_PULL;
-	SPI1pin.SCK.GPIOx_pinCfg.pupd      = NO_PUP_PDOWN;
-	SPI1pin.SCK.GPIOx_pinCfg.altFun    = AFSEL_0;
+	SPI1pin.SCK.gpioRegPtr = GPIOA_REGMAP;
+	SPI1pin.SCK.gpioPinCfg.gpioPinNum = PIN_5;
+	SPI1pin.SCK.gpioPinCfg.gpioPinMode      = ALTFN_MODE;
+	SPI1pin.SCK.gpioPinCfg.gpioPinOutType     = OUT_PUSH_PULL;
+	SPI1pin.SCK.gpioPinCfg.gpioPinPuPd      = NO_PULL_UP_PULL_DOWN;
+	SPI1pin.SCK.gpioPinCfg.gpioPinAltFun    = ALT_FUN_0;
 
 	// .- MOSI pin config
-	SPI1pin.MOSI.pGPIOx = GPIOA_REGMAP;
-	SPI1pin.MOSI.GPIOx_pinCfg.pinNumber = PIN_7;
-	SPI1pin.MOSI.GPIOx_pinCfg.mode      = ALTFN_MODE;
-	SPI1pin.MOSI.GPIOx_pinCfg.oType     = OUT_PUSH_PULL;
-	SPI1pin.MOSI.GPIOx_pinCfg.pupd      = NO_PUP_PDOWN;
-	SPI1pin.MOSI.GPIOx_pinCfg.altFun    = AFSEL_0;
+	SPI1pin.MOSI.gpioRegPtr = GPIOA_REGMAP;
+	SPI1pin.MOSI.gpioPinCfg.gpioPinNum = PIN_7;
+	SPI1pin.MOSI.gpioPinCfg.gpioPinMode      = ALTFN_MODE;
+	SPI1pin.MOSI.gpioPinCfg.gpioPinOutType     = OUT_PUSH_PULL;
+	SPI1pin.MOSI.gpioPinCfg.gpioPinPuPd      = NO_PULL_UP_PULL_DOWN;
+	SPI1pin.MOSI.gpioPinCfg.gpioPinAltFun    = ALT_FUN_0;
 
 
 	// .- Set up the SPI GPIO pins as alternate function mode.
 	RCC_IOPA_CLK_EN();
-	gpio_pinInit(&SPI1pin.NSS);
-	gpio_pinInit(&SPI1pin.SCK);
-	gpio_pinInit(&SPI1pin.MOSI);
+	gpio_PinInit(&SPI1pin.NSS);
+	gpio_PinInit(&SPI1pin.SCK);
+	gpio_PinInit(&SPI1pin.MOSI);
 
 
 	// .- Configures pin 13 from port C as input in order to use the user button.
-	userB1.pGPIOx = GPIOC_REGMAP;
-	userB1.GPIOx_pinCfg.pinNumber   = PIN_13;
-	userB1.GPIOx_pinCfg.mode        = IN_MODE;
-	userB1.GPIOx_pinCfg.pupd        = NO_PUP_PDOWN;
+	userB1.gpioRegPtr = GPIOC_REGMAP;
+	userB1.gpioPinCfg.gpioPinNum   = PIN_13;
+	userB1.gpioPinCfg.gpioPinMode        = IN_MODE;
+	userB1.gpioPinCfg.gpioPinPuPd        = NO_PULL_UP_PULL_DOWN;
 
 	RCC_IOPC_CLK_EN();
-	gpio_pinInit(&userB1);
+	gpio_PinInit(&userB1);
 
 }
 

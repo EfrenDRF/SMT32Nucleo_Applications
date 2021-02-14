@@ -44,16 +44,16 @@ typedef struct
  * Address: 0x00
  * Reset value: 0x3F84 0000
  *=====================================================================*/
-#define EXTI_IMR_EN(line_x)			MEMMAP_SET_BIT(EXTI_REGMAP->IMR, line_x)
-#define EXTI_IMR_DSBL(line_x)		MEMMAP_CLEAN_BIT(EXTI_REGMAP->IMR, line_x)
+#define EXTI_IMR_EN(line_x)			SET_BIT(EXTI_REGMAP->IMR, line_x)
+#define EXTI_IMR_DSBL(line_x)		CLEAN_BIT(EXTI_REGMAP->IMR, line_x)
 
 /*=====================================================================
  * EXTI event mask register (EXTI_EMR)
  * Address: 0x04
  * Reset value: 0x0000 0000
  *=====================================================================*/
-#define EXTI_EMR_EN(line_x)			MEMMAP_SET_BIT(EXTI_REGMAP->EMR, line_x)
-#define EXTI_EMR_DSBL(line_x)		MEMMAP_CLEAN_BIT(EXTI_REGMAP->EMR, line_x)
+#define EXTI_EMR_EN(line_x)			SET_BIT(EXTI_REGMAP->EMR, line_x)
+#define EXTI_EMR_DSBL(line_x)		CLEAN_BIT(EXTI_REGMAP->EMR, line_x)
 
 /*=====================================================================
  * EXTI rising edge trigger selection register (EXTI_RTSR)
@@ -81,7 +81,7 @@ typedef struct
  * Address: 0x15
  * Reset value: undefined
  *=====================================================================*/
-#define EXTI_PR_CLEAN_LINEx(line_x)		MEMMAP_SET_BIT(EXTI_REGMAP->PR, line_x)
+#define EXTI_PR_CLEAN_LINEx(line_x)		SET_BIT(EXTI_REGMAP->PR, line_x)
 
 
 #endif /* EXTI_STM32L053_EXTI_REGMAP_H_ */

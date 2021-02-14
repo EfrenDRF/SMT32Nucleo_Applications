@@ -38,7 +38,7 @@ int main(void)
 	// .-
 	mySPI1_Init();
 
-	spi_PeriphCtrl(SPI1_REGMAP, MEMMAP_BIT_SET);
+	spi_PeriphCtrl(SPI1_REGMAP, BIT_SET);
 
 	spi_SendData(SPI1_REGMAP, myData, strlen((char*)myData));
 
@@ -67,22 +67,22 @@ static void mySPI1_GPIO_Init(void)
 
 	memset(&SPI1pin, 0u, sizeof(SPI1pin));
 
-	SPI1pin.SCK.pGPIOx = GPIOA_REGMAP;
-	SPI1pin.SCK.GPIOx_pinCfg.pinNumber = PIN_5;
-	SPI1pin.SCK.GPIOx_pinCfg.mode      = ALTFN_MODE;
-	SPI1pin.SCK.GPIOx_pinCfg.altFun    = AFSEL_0;
+	SPI1pin.SCK.gpioRegPtr = GPIOA_REGMAP;
+	SPI1pin.SCK.gpioPinCfg.gpioPinNum = PIN_5;
+	SPI1pin.SCK.gpioPinCfg.gpioPinMode      = ALTFN_MODE;
+	SPI1pin.SCK.gpioPinCfg.gpioPinAltFun    = ALT_FUN_0;
 
-	SPI1pin.MOSI.pGPIOx = GPIOA_REGMAP;
-	SPI1pin.MOSI.GPIOx_pinCfg.pinNumber = PIN_7;
-	SPI1pin.MOSI.GPIOx_pinCfg.mode      = ALTFN_MODE;
-	SPI1pin.MOSI.GPIOx_pinCfg.altFun    = AFSEL_0;
+	SPI1pin.MOSI.gpioRegPtr = GPIOA_REGMAP;
+	SPI1pin.MOSI.gpioPinCfg.gpioPinNum = PIN_7;
+	SPI1pin.MOSI.gpioPinCfg.gpioPinMode      = ALTFN_MODE;
+	SPI1pin.MOSI.gpioPinCfg.gpioPinAltFun    = ALT_FUN_0;
 
 	// .- Enables PORTA and PORTC clocks.
 	RCC_IOPA_CLK_EN();
 
 	// .- Configures the GPIO pin
-	gpio_pinInit(&SPI1pin.SCK);
-	gpio_pinInit(&SPI1pin.MOSI);
+	gpio_PinInit(&SPI1pin.SCK);
+	gpio_PinInit(&SPI1pin.MOSI);
 
 }
 

@@ -15,28 +15,11 @@
 #define STM32L053_MEMMAP_H_
 
 /*Include header files____________________________________________________________*/
-#include <stdint.h>
+#include "stm32xxxx_utility.h"
 
 /*typedef definition______________________________________________________________*/
-typedef volatile uint32_t vuint32_t;
 
 /*Macro definition________________________________________________________________*/
-
-#define MEMMAP_BIT_SET		(0x01u)
-#define MEMMAP_BIT_CLEAN	(0x00u)
-
-#define MEMMAP_SET_BIT(REG,BIT_POS)		((REG)|= ( MEMMAP_BIT_SET << (BIT_POS) ))
-#define MEMMAP_CLEAN_BIT(REG,BIT_POS)	((REG) &= ~( MEMMAP_BIT_SET << (BIT_POS) ))
-
-#define MEMMAP_1B_CLEAN (0x01u)
-#define MEMMAP_2B_CLEAN (0x03u)
-#define MEMMAP_3B_CLEAN (0x07u)
-#define MEMMAP_4B_CLEAN (0x0Fu)
-#define MEMMAP_8B_CLEAN (0xFFu)
-
-
-#define MEMMAP_SET_BITFIELD(REG,VALUE)      ( (REG) |= (VALUE))
-#define MEMMAP_CLEAN_BITFIELD(REG,VALUE)    ( (REG) &= ~(VALUE))
 
 /*<=====================================================>
  *

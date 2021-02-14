@@ -7,7 +7,8 @@
   * @brief   System configuration controller driver.
   *
   * NOTE: Below code was written using RM0367 reference manual. Please check your
-  * correct reference manual to modify the code or get more information related.
+  *       correct reference manual to modify the code or get more information 
+  *       related.
   ******************************************************************************
 */
 
@@ -23,7 +24,7 @@
 
 
 /****************************************************************
- * @fn          - syscfg_EXTI_Cfg
+ * @fn          - syscfg_EXTIx_Cfg
  *
  * @brief		- Managing external interrupts line multiplexing
  *                to the internal edge detector.
@@ -36,23 +37,10 @@
  *
  * @Note        -
  */
-void syscfg_EXTI_Cfg(const gpio_regMap_t * const pGPIOx, gpio_pinNum_t pinNum)
+FUNC(void,AUTO) syscfg_EXTIx_Cfg( CONST(syscfg_extix_t,AUTO) srcEXTIx,CONST(gpio_pinnum_t,AUTO) pinNum)
 {
-	syscfg_exti_t tmpSrcEXTIx = EXTI_PA;
 	uint8_t tmpEXTIx = 0u;
 	uint8_t tmpCfgr = 0u;
-
-	// 1.- Selects the source input for the EXTIx external interrupt.
-	if (pGPIOx == GPIOA_REGMAP){tmpSrcEXTIx = EXTI_PA;}
-	else if (pGPIOx == GPIOB_REGMAP){tmpSrcEXTIx = EXTI_PB;}
-	else if (pGPIOx == GPIOC_REGMAP){tmpSrcEXTIx = EXTI_PC;}
-	else if (pGPIOx == GPIOD_REGMAP){tmpSrcEXTIx = EXTI_PD;}
-	else if (pGPIOx == GPIOE_REGMAP){tmpSrcEXTIx = EXTI_PE;}
-	else if (pGPIOx == GPIOH_REGMAP){tmpSrcEXTIx = EXTI_PH;}
-	else
-	{
-		/* No action required - Avoid MISRA*/
-	}
 
 	// 2.- Selects the EXTIx bits filed.
 	tmpEXTIx = (pinNum & 0x03u);
@@ -61,9 +49,9 @@ void syscfg_EXTI_Cfg(const gpio_regMap_t * const pGPIOx, gpio_pinNum_t pinNum)
 	tmpCfgr = (pinNum >> 0x02u) & 0x03;
 
 	// 4.- Cleans the EXTIx bits field.
-	SYSCFG_REGMAP->EXTICR[tmpCfgr] &= ~ ( MEMMAP_4B_CLEAN << (4u * tmpEXTIx) );
+	SYSCFG_REGMAP->EXTICR[tmpCfgr] &= ~ ( CLEAN_4B << (4u * tmpEXTIx) );
 
 	// 5.- Sets the source input into EXTIx bits field.
-	SYSCFG_REGMAP->EXTICR[tmpCfgr] |= ( tmpSrcEXTIx << (4u * tmpEXTIx) );
+	SYSCFG_REGMAP->EXTICR[tmpCfgr] |= ( srcEXTIx << (4u * tmpEXTIx) );
 
 }

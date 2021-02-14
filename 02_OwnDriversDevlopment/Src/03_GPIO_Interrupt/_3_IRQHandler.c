@@ -21,8 +21,8 @@
 #define PIN_IN_EXTI	pinUserButton
 #define PIN_OUT		pinGreenLED
 
-#define	TOGGLE_LED_GREEN()		gpio_Toggle_Pin(PIN_OUT.pGPIOx, PIN_OUT.GPIOx_pinCfg.pinNumber)
-#define LINE_SRC				PIN_IN_EXTI.GPIOx_pinCfg.pinNumber
+#define	TOGGLE_LED_GREEN()		gpio_TogglePin(PIN_OUT.gpioRegPtr, PIN_OUT.gpioPinCfg.gpioPinNum)
+#define LINE_SRC				PIN_IN_EXTI.gpioPinCfg.gpioPinNum
 
 
 /*Global variable declaration ----------------*/

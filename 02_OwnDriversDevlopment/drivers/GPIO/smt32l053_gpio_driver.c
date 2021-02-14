@@ -7,7 +7,8 @@
   * @brief   General-purpose I/Os driver
   *
   * NOTE: Below code was written using RM0367 reference manual. Please check your
-  * correct reference manual to modify the code or get more information related.
+  *       correct reference manual to modify the code or get more information
+  *       related.
   ******************************************************************************
 */
 
@@ -15,12 +16,49 @@
 /*Include header files____________________________________________________________*/
 #include "stm32l053_gpio_driver.h"
 #include "stm32l053_rcc_driver.h"
+#include "stm32l053_syscfg_driver.h"
+#include "stm32l053_exti_driver.h"
 
 /*Macro definition_________________________________________________________________*/
 
-/*Global function declaration______________________________________________________*/
-extern void syscfg_EXTI_Cfg(const gpio_regMap_t * const pGPIOx, gpio_pinNum_t pinNum);
 
+/*=====================================================================
+ * Local function definition
+ *=====================================================================*/
+
+/****************************************************************
+ * @fn			- gpio_GetGPIOIndex.
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		-
+ */
+FUNC(uint8_t, STATIC) gpio_GetGPIOIndex(CONSTPTR2_CONST(gpio_regMap_t, AUTO) gpioRegPtr)
+{
+	VAR(uint8_t,AUTO) retVal = 0u;
+
+	if (gpioRegPtr == GPIOA_REGMAP){retVal = GPIOA_INDEX;}
+	else if (gpioRegPtr == GPIOB_REGMAP){retVal = GPIOB_INDEX;}
+	else if (gpioRegPtr == GPIOC_REGMAP){retVal = GPIOC_INDEX;}
+	else if (gpioRegPtr == GPIOD_REGMAP){retVal = GPIOD_INDEX;}
+	else if (gpioRegPtr == GPIOE_REGMAP){retVal = GPIOE_INDEX;}
+	else if (gpioRegPtr == GPIOH_REGMAP){retVal = GPIOH_INDEX;}
+	else
+	{
+		/* Avoid Misra rule 15.7 */
+	}
+
+	return retVal;
+}
+
+
+/*=====================================================================
+ * Global function definition
+ *=====================================================================*/
 
 /****************************************************************
  * @fn			- gpio_Init.
@@ -28,80 +66,85 @@ extern void syscfg_EXTI_Cfg(const gpio_regMap_t * const pGPIOx, gpio_pinNum_t pi
  * @brief		- Configures a specific Port x pin as INPUT, OUTPUT,
  * 				  ANALOG and ALTERNATE I/O.
  *
- * @param[in]	- pGPIOHandle,Holds the user configuration pin.
+ * @param[in]	- gpioHandlePtr,Holds the user configuration pin.
  *
  * @return		- none.
  *
- * @Note		- As precondition RCC_IOPx_CLK_EN must be called.
  */
-void gpio_pinInit(gpio_handle_t const *pGPIOHandle)
+FUNC(void, AUTO) gpio_PinInit(CONSTPTR2_VAR(gpio_handle_t, AUTO) gpioHandlePtr)
 {
-  uint8_t u8Tmp = 0u;
-  uint8_t tmpPinNum = pGPIOHandle->GPIOx_pinCfg.pinNumber;	/* Holds user GPIO pin number.*/
-  uint8_t afTmp = 0;
+  CONSTPTR2_VAR  (gpio_regMap_t,AUTO)  gpioRegPtr = gpioHandlePtr->gpioRegPtr;
+  CONSTPTR2_CONST(gpio_pinCfg_t,AUTO)  gpioPinCfgPtr = &gpioHandlePtr->gpioPinCfg;
+  CONST(uint8_t,AUTO) pinNum = (uint8_t)gpioPinCfgPtr->gpioPinNum;
+  CONST(uint8_t,AUTO) bitFieldPos = (pinNum << 1u);
+  CONST(uint8_t,AUTO) tmpGpioIndex = gpio_GetGPIOIndex(gpioRegPtr);
+  VAR  (uint8_t,AUTO) tmpAFRx = 0u;
+  VAR  (uint8_t,AUTO) tmpAFSELy = 0u;
 
-  // 0.- Clean bit field from PUPDR(must be reset to Analog purposes) cfg register.
-  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->PUPDR, MEMMAP_2B_CLEAN << (2u * tmpPinNum)); /* 00: No pull-up, pull-down */
 
-  // 1.- Configure the pin mode
-  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->MODER, MEMMAP_2B_CLEAN << (2u * tmpPinNum));
-  u8Tmp = pGPIOHandle->GPIOx_pinCfg.mode;
-  pGPIOHandle->pGPIOx->MODER |= ((3u & u8Tmp) << (2u*tmpPinNum));
+  // .- Enables RCC IOPORTx bus clock.
+  rcc_GPIOxClkCtrl( rcc_constIOPXENBIT[tmpGpioIndex], RCC_CLK_EN);
 
-  if(u8Tmp != ANALOG_MODE)
+  // 0.- PUPDR bits field must be reset to analog purposes.
+  //     <!-- 00: Neither pull-up nor pull-down -->
+  CLEAN_BITFIELD(gpioRegPtr->PUPDR, CLEAN_2B << bitFieldPos);
+
+  // 1.- Configures pin mode
+  CLEAN_BITFIELD(gpioRegPtr->MODER, CLEAN_2B << bitFieldPos);
+  gpioRegPtr->MODER |= ((0x03u & gpioPinCfgPtr->gpioPinMode) << bitFieldPos);
+
+  if(gpioPinCfgPtr->gpioPinMode != ANALOG_MODE)
   {
-	   if( (u8Tmp == OUT_MODE) || (u8Tmp == ALTFN_MODE) )
+	   if( (gpioPinCfgPtr->gpioPinMode == OUT_MODE) || (gpioPinCfgPtr->gpioPinMode == ALTFN_MODE) )
 	   {
-	  	  // 2.- Configure the pin output type push-pull or open-drain.
-	  	  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->OTYPER, MEMMAP_1B_CLEAN << tmpPinNum); /* 0: Output push-pull */
-	  	  u8Tmp = pGPIOHandle->GPIOx_pinCfg.oType;
-	  	  pGPIOHandle->pGPIOx->OTYPER |= (u8Tmp << tmpPinNum);
+	  	  // 2.- Configures pin output type.
+		  //     <!-- Either push-pull or open-drain -->
+		  CLEAN_BITFIELD(gpioRegPtr->OTYPER, CLEAN_1B << pinNum);
+		  gpioRegPtr->OTYPER |= (gpioPinCfgPtr->gpioPinOutType << pinNum);
 
-	  	  //3.- Configure pin speed
-	  	  MEMMAP_CLEAN_BITFIELD(pGPIOHandle->pGPIOx->OSPEEDR, MEMMAP_2B_CLEAN << (2u * tmpPinNum));
-	  	  u8Tmp = pGPIOHandle->GPIOx_pinCfg.oSpeed;
-	  	  pGPIOHandle->pGPIOx->OSPEEDR |= (u8Tmp << (2u*tmpPinNum));
+	  	  //3.- Configures pin speed
+	  	  CLEAN_BITFIELD(gpioRegPtr->OSPEEDR, CLEAN_2B << bitFieldPos);
+	  	  gpioRegPtr->OSPEEDR |= (gpioPinCfgPtr->gpioPinOutSpeed << bitFieldPos);
 
-	  	  if( pGPIOHandle->GPIOx_pinCfg.mode == ALTFN_MODE)
+	  	  if(gpioPinCfgPtr->gpioPinMode == ALTFN_MODE)
 	  	  {
 			  // 4.- Alternate function selection
-			  u8Tmp = pGPIOHandle->GPIOx_pinCfg.altFun;	/* Holds the AF selection value*/
-			  afTmp = (u8Tmp >> 0x3u) & 0x01; /* Holds MSB bit that means whether use 1:HIGH reg or 0:LOW reg */
+			  //     <!-- AFRx Alternate function register x -->
+			  //     <!-- Holds MSB bit which means whether use 1:HIGH AFR or 0:LOW AFR -->
+			  tmpAFRx = (pinNum >> 0x3u) & 0x01u;
+			  //     <!-- AFSELy Alternate function selection for port x pin y -->
+			  tmpAFSELy = (4u * (pinNum&0x07u));
 
-			  MEMMAP_CLEAN_BITFIELD( pGPIOHandle->pGPIOx->AFR[afTmp], MEMMAP_4B_CLEAN << (4u * (tmpPinNum&0x07u)));
-			  u8Tmp &= 0x07u; /* AFSEL from 0000 to 0111 otherwise are reserved*/
-			  pGPIOHandle->pGPIOx->AFR[afTmp] |= (u8Tmp << (4u* (tmpPinNum & 0x07u)));
-	  	  }
-
+			  CLEAN_BITFIELD( gpioRegPtr->AFR[tmpAFRx], CLEAN_4B << tmpAFSELy );
+			  gpioRegPtr->AFR[tmpAFRx] |= (gpioPinCfgPtr->gpioPinAltFun << tmpAFSELy);
+	  	  };
 	    }
 	   /* External interrupt/ wakeup lines. */
-	   else if ( pGPIOHandle->GPIOx_pinCfg.mode == IN_IMR_MODE)
+	   else if ( gpioPinCfgPtr->gpioPinMode == IN_IMR_MODE)
 	   {
 		   // - Enable the system configuration clock.
 		   RCC_SYSCF_CLK_EN();
 
 		   // - Selects the source input for the EXTIx external interrupt.
-		   syscfg_EXTI_Cfg(pGPIOHandle->pGPIOx, tmpPinNum);
+		   syscfg_EXTIx_Cfg((syscfg_extix_t)tmpGpioIndex, pinNum);
 
 		   // - Configures the trigger selection.
-		   exti_triggerSel_Cfg(tmpPinNum, pGPIOHandle->GPIOx_pinCfg.triggerSel);
+		   exti_triggerSel_Cfg((uint8_t)pinNum, gpioPinCfgPtr->extiPinTriggerSel);
 
 		   // - Configures the interrupt request from line x as masked.
-		   EXTI_IMR_EN(tmpPinNum);
+		   EXTI_IMR_EN(pinNum);
 	   }
 	   else
 	   {
-		   /* No action required - Avoid MISRA. */
+		   /* Avoid Misra Rule 15.7 */
 	   }
 
 	    // 5.- Configure pin pull-up or pull-down.
-	    u8Tmp = pGPIOHandle->GPIOx_pinCfg.pupd;
-
-	    if( (u8Tmp == PUP) || (u8Tmp == PDOWN ))
+	    if( (gpioPinCfgPtr->gpioPinPuPd == PULL_UP) || (gpioPinCfgPtr->gpioPinPuPd == PULL_DOWN) )
 	    {
-	  	  pGPIOHandle->pGPIOx->PUPDR |= (u8Tmp << (2u*tmpPinNum));	
+	    	gpioRegPtr->PUPDR |= (gpioPinCfgPtr->gpioPinPuPd << bitFieldPos);
 	    };
-  }
+  };
 }
 
 
@@ -116,51 +159,14 @@ void gpio_pinInit(gpio_handle_t const *pGPIOHandle)
  *
  * @Note		-
  */
-
-
-/****************************************************************
- * @fn			- gpio_Read_Pin
- *
- * @brief		-
- *
- * @param[in]	-
- *
- * @return		-
- *
- * @Note		-
- */
-gpio_pinst_t gpio_Read_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber)
+FUNC(void,AUTO) gpio_DeInit(void)
 {
-	gpio_pinst_t retValue = 0u;
-
-	retValue = (gpio_pinst_t)(pGPIOx->IDR >> pinNumber) & 0x0001UL;
-
-	return retValue;
-}
-
-/****************************************************************
- * @fn			- gpio_Read_Port
- *
- * @brief		-
- *
- * @param[in]	-
- *
- * @return		-
- *
- * @Note		-
- */
-uint16_t gpio_Read_Port(gpio_regMap_t *pGPIOx)
-{
-	uint16_t retValue = 0u;
-
-	retValue = (uint16_t)(pGPIOx->IDR & 0xFFFFUL);
-
-	return retValue;
+ /*@TODO*/
 }
 
 
 /****************************************************************
- * @fn			- gpio_Write_Pin
+ * @fn			- gpio_ReadPin
  *
  * @brief		-
  *
@@ -170,23 +176,64 @@ uint16_t gpio_Read_Port(gpio_regMap_t *pGPIOx)
  *
  * @Note		-
  */
-void gpio_Write_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber, gpio_pinst_t state)
+FUNC(gpio_pinst_t,AUTO) gpio_ReadPin(CONSTPTR2_CONST(gpio_regMap_t,AUTO) gpioRegPtr, VAR(gpio_pinnum_t,AUTO) gpioPinNum)
+{
+	VAR(gpio_pinst_t,AUTO) retVal = 0u;
+
+	retVal = (gpio_pinst_t) ((gpioRegPtr->IDR >> gpioPinNum) & 0x01u);
+
+	return retVal;
+}
+
+/****************************************************************
+ * @fn			- gpio_ReadPort
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		-
+ */
+FUNC(uint16_t,AUTO) gpio_ReadPort(CONSTPTR2_CONST(gpio_regMap_t,AUTO) gpioRegPtr)
+{
+	VAR(uint16_t,AUTO) retVal = 0u;
+
+	retVal = (uint16_t)gpioRegPtr->IDR;
+
+	return retVal;
+}
+
+
+/****************************************************************
+ * @fn			- gpio_WritePin
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		-
+ */
+FUNC(void,AUTO) gpio_WritePin (CONSTPTR2_VAR(gpio_regMap_t,AUTO) gpioRegPtr, VAR(gpio_pinnum_t,AUTO) pinNum, VAR(gpio_pinst_t,AUTO) pinState)
 {
 
-	if( state == MEMMAP_BIT_CLEAN)
+	if( pinState == BIT_CLEAN)
 	{
-		pGPIOx->ODR &= ~(MEMMAP_BIT_SET << pinNumber);
+		gpioRegPtr->ODR &= ~(BIT_SET << pinNum);
 	}
 	else
 	{
-		pGPIOx->ODR |= (MEMMAP_BIT_SET << pinNumber);
+		gpioRegPtr->ODR |= (BIT_SET << pinNum);
 	}
 
 }
 
 
 /****************************************************************
- * @fn			- gpio_Write_Port
+ * @fn			- gpio_WritePort
  *
  * @brief		-
  *
@@ -196,28 +243,26 @@ void gpio_Write_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber, gpio_pinst_t
  *
  * @Note		-
  */
-void gpio_Write_Port(gpio_regMap_t *pGPIOx, uint16_t u16Value)
+FUNC(void,AUTO) gpio_WritePort(CONSTPTR2_VAR(gpio_regMap_t,AUTO) gpioRegPtr, VAR(uint16_t,AUTO) portValue)
 {
-	pGPIOx->ODR &= 0x0000UL;
-	pGPIOx->ODR |= u16Value;
+	gpioRegPtr->ODR &= 0x0000UL;
+	gpioRegPtr->ODR |= portValue;
 }
 
 /****************************************************************
- * @fn			- gpio_Toggle_Pin
+ * @fn			- gpio_TogglePin
  *
  * @brief		-
  *
- * @param[in]	- pGPIOx, holds GPIO port register map.
- * @param[in]	- pinNumber, holds pin number from 0 to 15.
+ * @param[in]	- gpioRegPtr, holds GPIO port register map.
+ * @param[in]	- gpioPinNum, holds pin number from 0 to 15.
  *
  * @return		- None
  *
- * @Note		- gpio_pinInit must be called before change the data output.
+ * @Note		- gpio_PinInit must be called before change the data output.
  */
-
-void gpio_Toggle_Pin(gpio_regMap_t *pGPIOx, gpio_pinNum_t pinNumber)
+FUNC(void,AUTO) gpio_TogglePin(CONSTPTR2_VAR(gpio_regMap_t,AUTO) gpioRegPtr, VAR(gpio_pinnum_t,AUTO) pinNum)
 {
-	pGPIOx->ODR ^= (MEMMAP_BIT_SET << pinNumber);
+	gpioRegPtr->ODR ^= (BIT_SET << pinNum);
 }
-
 

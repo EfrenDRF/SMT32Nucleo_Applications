@@ -17,7 +17,7 @@
 #include "stm32l053_spi_driver.h"
 
 /*Local macro def ----------------------------*/
-#define READ_BUTTON_STATE()		gpio_Read_Pin(GPIOC_REGMAP, PIN_13)
+#define READ_BUTTON_STATE()		gpio_ReadPin(GPIOC_REGMAP, PIN_13)
 
 /*Global function declaration------------------*/
 extern void myGPIO_Init(void);
@@ -65,13 +65,13 @@ int main(void)
 
 			// .- The button is already released.
 
-			spi_PeriphCtrl(SPI1_REGMAP, MEMMAP_BIT_SET);
+			spi_PeriphCtrl(SPI1_REGMAP, BIT_SET);
 
 			myDataLen |= 0xC0u;
 			spi_SendData(SPI1_REGMAP, &myDataLen, strlen((char*)&myDataLen));
 		    spi_SendData(SPI1_REGMAP, myData, strlen((char*)myData));
 
-		    spi_PeriphCtrl(SPI1_REGMAP, MEMMAP_BIT_CLEAN);
+		    spi_PeriphCtrl(SPI1_REGMAP, BIT_CLEAN);
 		}
 	}
 

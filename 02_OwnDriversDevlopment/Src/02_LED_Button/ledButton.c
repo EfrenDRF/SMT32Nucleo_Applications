@@ -20,8 +20,8 @@
 #define LD2_GREEN				PIN_5
 #define B1_USER					PIN_13
 
-#define	TOGGLE_LED_GREEN()		gpio_Toggle_Pin(GPIOA_REGMAP, LD2_GREEN)
-#define READ_BUTTON_STATE()		gpio_Read_Pin(GPIOC_REGMAP, B1_USER)
+#define	TOGGLE_LED_GREEN()		gpio_TogglePin(GPIOA_REGMAP, LD2_GREEN)
+#define READ_BUTTON_STATE()		gpio_ReadPin(GPIOC_REGMAP, B1_USER)
 
 
 /*Local function def-----------------------------*/
@@ -67,24 +67,24 @@ static void myGPIO_Init(void)
 	gpio_handle_t myGPIOPort;
 
 	/* Pin 5 configured as Output to manage the green led.*/
-	myGPIOPort.pGPIOx = GPIOA_REGMAP;
-	myGPIOPort.GPIOx_pinCfg.pinNumber = LD2_GREEN;
-	myGPIOPort.GPIOx_pinCfg.mode = OUT_MODE;
-	myGPIOPort.GPIOx_pinCfg.oType = OUT_PUSH_PULL;
-	myGPIOPort.GPIOx_pinCfg.oSpeed = LS;
-	myGPIOPort.GPIOx_pinCfg.pupd = NO_PUP_PDOWN;
+	myGPIOPort.gpioRegPtr = GPIOA_REGMAP;
+	myGPIOPort.gpioPinCfg.gpioPinNum = LD2_GREEN;
+	myGPIOPort.gpioPinCfg.gpioPinMode = OUT_MODE;
+	myGPIOPort.gpioPinCfg.gpioPinOutType = OUT_PUSH_PULL;
+	myGPIOPort.gpioPinCfg.gpioPinOutSpeed = LOW_SPD;
+	myGPIOPort.gpioPinCfg.gpioPinPuPd = NO_PULL_UP_PULL_DOWN;
 
 	RCC_IOPA_CLK_EN();
-	gpio_pinInit(&myGPIOPort);
+	gpio_PinInit(&myGPIOPort);
 
 	/*Pin 13 configured as Input to read the User Button status*/
-	myGPIOPort.pGPIOx = GPIOC_REGMAP;
-	myGPIOPort.GPIOx_pinCfg.pinNumber = B1_USER;
-	myGPIOPort.GPIOx_pinCfg.mode = IN_MODE;
-	myGPIOPort.GPIOx_pinCfg.pupd = NO_PUP_PDOWN;
+	myGPIOPort.gpioRegPtr = GPIOC_REGMAP;
+	myGPIOPort.gpioPinCfg.gpioPinNum = B1_USER;
+	myGPIOPort.gpioPinCfg.gpioPinMode = IN_MODE;
+	myGPIOPort.gpioPinCfg.gpioPinPuPd = NO_PULL_UP_PULL_DOWN;
 
 	RCC_IOPC_CLK_EN();
-	gpio_pinInit(&myGPIOPort);
+	gpio_PinInit(&myGPIOPort);
 
 }
 

@@ -122,7 +122,7 @@ void spi_Init(spi_handle_t * pSPIhandle)
  */
 void spi_PeriphCtrl(spi_regMap_t * const pSPIx, uint8_t control)
 {
-	if(control == MEMMAP_BIT_SET)
+	if(control == BIT_SET)
 	{
 		// .- Enables SPI peripheral.
 		pSPIx->CR1 |= (1u << SPI_CR1_SPE_B);
@@ -130,7 +130,7 @@ void spi_PeriphCtrl(spi_regMap_t * const pSPIx, uint8_t control)
 	else
 	{
 		// .- Waits until SPI is not busy.
-		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_BSY_B) == MEMMAP_BIT_SET);
+		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_BSY_B) == BIT_SET);
 
 		// .- Disables SPI peripheral.
 		pSPIx->CR1 &= ~(1u << SPI_CR1_SPE_B);
@@ -156,7 +156,7 @@ void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
 	while(u8TmpLen > 0u)
 	{
 		// .- Wait until TXE flag (Tx buffer empty) is set.
-		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_TXE_B) == MEMMAP_BIT_CLEAN);
+		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_TXE_B) == BIT_CLEAN);
 
 		/*
 		 * It indicates that the internal Tx buffer is ready to be loaded
@@ -199,7 +199,7 @@ void spi_ReceiveData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
 	while(u8TmpLen > 0u)
 	{
 		// .- Wait until RXNE flag (Rx buffer not empty) is set.
-		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_RXE_B) == MEMMAP_BIT_CLEAN);
+		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_RXE_B) == BIT_CLEAN);
 
 
 		/*

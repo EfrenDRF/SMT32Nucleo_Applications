@@ -57,28 +57,28 @@ static void myGPIO_Init(void)
 	memset(&pinUserButton, 0u, sizeof(pinUserButton));
 
 	// .- Configures the PORTA_5 to handle the green LED.
-	pinGreenLED.pGPIOx = GPIOA_REGMAP;
-	pinGreenLED.GPIOx_pinCfg.pinNumber = PIN_5;
-	pinGreenLED.GPIOx_pinCfg.mode = OUT_MODE;
-	pinGreenLED.GPIOx_pinCfg.oType = OUT_PUSH_PULL;
-	pinGreenLED.GPIOx_pinCfg.oSpeed = LS;
-	pinGreenLED.GPIOx_pinCfg.pupd = NO_PUP_PDOWN;
+	pinGreenLED.gpioRegPtr = GPIOA_REGMAP;
+	pinGreenLED.gpioPinCfg.gpioPinNum = PIN_5;
+	pinGreenLED.gpioPinCfg.gpioPinMode = OUT_MODE;
+	pinGreenLED.gpioPinCfg.gpioPinOutType = OUT_PUSH_PULL;
+	pinGreenLED.gpioPinCfg.gpioPinOutSpeed = LOW_SPD;
+	pinGreenLED.gpioPinCfg.gpioPinPuPd = NO_PULL_UP_PULL_DOWN;
 
 
 	// .- Configures the PORTC_13 to handle the user push button.
-	pinUserButton.pGPIOx = GPIOC_REGMAP;
-	pinUserButton.GPIOx_pinCfg.pinNumber = PIN_13;
-	pinUserButton.GPIOx_pinCfg.mode = IN_IMR_MODE;
-	pinUserButton.GPIOx_pinCfg.pupd = NO_PUP_PDOWN;
-	pinUserButton.GPIOx_pinCfg.triggerSel = RISING_TRG_EN;
+	pinUserButton.gpioRegPtr = GPIOC_REGMAP;
+	pinUserButton.gpioPinCfg.gpioPinNum = PIN_13;
+	pinUserButton.gpioPinCfg.gpioPinMode = IN_IMR_MODE;
+	pinUserButton.gpioPinCfg.gpioPinPuPd = NO_PULL_UP_PULL_DOWN;
+	pinUserButton.gpioPinCfg.extiPinTriggerSel = RISING_TRG_EN;
 
 	// .- Enables PORTA and PORTC clocks.
 	RCC_IOPA_CLK_EN();
 	RCC_IOPC_CLK_EN();
 
 	// .- Configures the GPIO pin
-	gpio_pinInit(&pinGreenLED);
-	gpio_pinInit(&pinUserButton);
+	gpio_PinInit(&pinGreenLED);
+	gpio_PinInit(&pinUserButton);
 
 
 	// .- Enable the external interrupt.

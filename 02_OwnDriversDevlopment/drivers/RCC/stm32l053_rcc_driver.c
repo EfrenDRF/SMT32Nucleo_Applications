@@ -19,6 +19,16 @@
 
 /*Local function declaration_______________________________________________________*/
 
+/*Global variable definition_______________________________________________________*/
+CONST(uint8_t, AUTO) rcc_constIOPXENBIT[GPIOMAX_INDEX] =
+{
+		RCC_IOPENR_IOPAEN_B,
+		RCC_IOPENR_IOPBEN_B,
+		RCC_IOPENR_IOPCEN_B,
+		RCC_IOPENR_IOPDEN_B,
+		RCC_IOPENR_IOPEEN_B,
+		RCC_IOPENR_IOPHEN_B
+};
 /*=====================================================================
  * Local function definition
  *=====================================================================*/
@@ -27,6 +37,29 @@
  * Global function definition
  *=====================================================================*/
 
+/****************************************************************
+ * @fn			- rcc_GPIOxClkCtrl.
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		- none
+ */
+FUNC(void, AUTO) rcc_GPIOxClkCtrl(CONST(uint8_t,AUTO)port_x, VAR(uint8_t,AUTO) control)
+{
+	if(control == RCC_CLK_EN)
+	{
+		SET_BIT( RCC_REGMAP->IOPENR, port_x);
+	}
+	else
+	{
+		CLEAN_BIT(RCC_REGMAP->IOPENR, port_x);
+	}
+
+}
 /****************************************************************
  * @fn			- rcc_I2CxClkSrc.
  *
@@ -38,7 +71,7 @@
  *
  * @Note		- none
  */
-uint8_t rcc_I2CxClkSrc(rcc_i2cxsel_t clkSrc, uint8_t i2cxBit)
+FUNC(uint8_t, AUTO)rcc_I2CxClkSrc(VAR(rcc_i2cxsel_t,AUTO) clkSrc, VAR(uint8_t,AUTO) i2cxBit)
 {
 	uint8_t retVal = RCC_NOTOK;
 
@@ -51,7 +84,7 @@ uint8_t rcc_I2CxClkSrc(rcc_i2cxsel_t clkSrc, uint8_t i2cxBit)
 			(clkSrc == HSI16_AS_I2C_CLK) )
 		{
 			retVal = RCC_OK;
-			RCC_REGMAP->CCIPR &= ~( MEMMAP_2B_CLEAN << i2cxBit);
+			RCC_REGMAP->CCIPR &= ~( CLEAN_2B << i2cxBit);
 			RCC_REGMAP->CCIPR |= ( clkSrc << i2cxBit);
 		}
 	}

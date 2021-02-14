@@ -115,14 +115,14 @@ void i2c_Init(i2c_handle_t * i2cHandlePtr)
 	i2c_PeripheClkCtrl(tmpI2cReg, RCC_CLK_EN);
 
 	// .- Clear PE bit in I2C_CR1
-	MEMMAP_CLEAN_BIT(tmpI2cReg->CR1 , I2C_CR1_PE_B);
+	CLEAN_BIT(tmpI2cReg->CR1 , I2C_CR1_PE_B);
 
 	//.- Wait until PE bit is clean.
-	while( (tmpI2cReg->CR1 & (1u << I2C_CR1_PE_B)) != MEMMAP_BIT_CLEAN)
+	while( (tmpI2cReg->CR1 & (1u << I2C_CR1_PE_B)) != BIT_CLEAN)
 	{/* Avoid Misra */}
 
 	// .-Set PE bit in I2C_CR1
-	MEMMAP_SET_BIT(tmpI2cReg->CR1 , I2C_CR1_PE_B);
+	SET_BIT(tmpI2cReg->CR1 , I2C_CR1_PE_B);
 
 	// .-
 	u8Tmp = i2c_GetClkSrcSelBits(tmpI2cReg);

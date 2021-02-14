@@ -41,18 +41,18 @@ void exti_triggerSel_Cfg(uint8_t line_x, exti_rtsr_t triggerSel)
 	{
 	case RISING_TRG_EN:
 		/* Rising trigger enabled (for Event and Interrupt) for input line x */
-		MEMMAP_CLEAN_BIT(EXTI_REGMAP->FTSR, line_x);
-		MEMMAP_SET_BIT(EXTI_REGMAP->RTSR, line_x);
+		CLEAN_BIT(EXTI_REGMAP->FTSR, line_x);
+		SET_BIT(EXTI_REGMAP->RTSR, line_x);
 		break;
 	case FALLING_TRG_EN:
 		/* Falling trigger enabled (for Event and Interrupt) for input line x */
-		MEMMAP_CLEAN_BIT(EXTI_REGMAP->RTSR, line_x);
-		MEMMAP_SET_BIT(EXTI_REGMAP->FTSR, line_x);
+		CLEAN_BIT(EXTI_REGMAP->RTSR, line_x);
+		SET_BIT(EXTI_REGMAP->FTSR, line_x);
 		break;
 	case RISING_FALLING_TRG_EN:
 		/* Rising and falling edge triggers for input line x */
-		MEMMAP_SET_BIT(EXTI_REGMAP->RTSR, line_x);
-		MEMMAP_SET_BIT(EXTI_REGMAP->FTSR, line_x);
+		SET_BIT(EXTI_REGMAP->RTSR, line_x);
+		SET_BIT(EXTI_REGMAP->FTSR, line_x);
 		break;
 	default:
 			/* No action required - avoid MISRA */
