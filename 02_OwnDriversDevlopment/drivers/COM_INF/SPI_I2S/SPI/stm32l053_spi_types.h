@@ -103,4 +103,10 @@ typedef enum
 	SIMPLEX_TX_ONLY,   /*Simplex Tx communication */
 	SIMPLEX_RX_ONLY    /*Simplex Rx communication*/
 }spi_commode_t;
+
+/*Macro definition______________________________________________________________*/
+#define SPI1_INDEX   0u
+#define SPI2_INDEX   1u
+#define SPIMAX_INDEX 2u
+
 #endif /* COM_INF_SPI_I2S_SPI_STM32L053_SPI_TYPES_H_ */

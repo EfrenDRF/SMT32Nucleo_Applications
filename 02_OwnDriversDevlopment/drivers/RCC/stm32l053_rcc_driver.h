@@ -21,6 +21,7 @@
 #include "stm32l053_rcc_regMap.h"
 #include "stm32l053_rcc_types.h"
 #include "stm32l053_gpio_types.h"
+#include "stm32l053_i2c_types.h"
 
 /*typedef definition______________________________________________________________*/
 
@@ -145,12 +146,20 @@
 #define RCC_TIM2_CLK_DSBL()         CLEAN_BIT(RCC_REGMAP->APB1ENR, RCC_APB1ENR_TIM2EN_B)
 
 /*Global variables declaration_____________________________________________________*/
-CONST(uint8_t, EXTERN) rcc_constIOPXENBIT[GPIOMAX_INDEX];
+
 
 /*Global function declaration______________________________________________________*/
-FUNC(void, EXTERN) rcc_GPIOxClkCtrl(CONST(uint8_t,AUTO)port_x, VAR(uint8_t,AUTO) control);
 
-FUNC(uint8_t, EXTERN)rcc_I2CxClkSrc(VAR(rcc_i2cxsel_t,AUTO) clkSrc, VAR(uint8_t,AUTO) i2cxBit);
+/*
+ *
+ */
+FUNC(void, EXTERN) rcc_IOPxClkCtrl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO) control);
+FUNC(void, EXTERN) rcc_I2CxClkCtrl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO) control);
+FUNC(void, EXTERN) rcc_SPIxClkCtrl(CONST(uint8_t,AUTO)spiIndex,VAR(uint8_t,AUTO) control);
 
+/*
+ *
+ */
+FUNC(void, EXTERN) rcc_I2CxClkSrc(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_i2cxsel_t,AUTO) clkSrc);
 
 #endif /* RCC_STM32L053_RCC_DRIVER_H_ */

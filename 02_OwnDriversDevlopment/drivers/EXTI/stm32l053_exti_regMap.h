@@ -24,12 +24,12 @@
  */
 typedef struct
 {
-	uint32_t IMR;	/* offset: 0x00 EXTI interrupt mask register*/
-	uint32_t EMR;	/* offset: 0x04 EXTI event mask register*/
-	uint32_t RTSR;	/* offset: 0x08 EXTI rising edge trigger selection register*/
-	uint32_t FTSR;	/* offset: 0x0C EXTI falling edge trigger selection register*/
-	uint32_t SWIER;	/* offset: 0x10 EXTI software interrupt event register*/
-	uint32_t PR;	/* offset: 0x14 EXTI pending register*/
+	uint32_t IMR;    /* offset: 0x00 EXTI interrupt mask register*/
+	uint32_t EMR;    /* offset: 0x04 EXTI event mask register*/
+	uint32_t RTSR;   /* offset: 0x08 EXTI rising edge trigger selection register*/
+	uint32_t FTSR;   /* offset: 0x0C EXTI falling edge trigger selection register*/
+	uint32_t SWIER;  /* offset: 0x10 EXTI software interrupt event register*/
+	uint32_t PR;     /* offset: 0x14 EXTI pending register*/
 
 }exti_regMap_t;
 
@@ -37,23 +37,23 @@ typedef struct
 /*
  * EXTI peripheral base address.
  */
-#define EXTI_REGMAP		((exti_regMap_t*)MEMAP_EXTI_PERIPH_BASEADDR)
+#define EXTI_REGMAP                ((exti_regMap_t*)MEMAP_EXTI_PERIPH_BASEADDR)
 
 /*=====================================================================
  * EXTI interrupt mask register (EXTI_IMR)
  * Address: 0x00
  * Reset value: 0x3F84 0000
  *=====================================================================*/
-#define EXTI_IMR_EN(line_x)			SET_BIT(EXTI_REGMAP->IMR, line_x)
-#define EXTI_IMR_DSBL(line_x)		CLEAN_BIT(EXTI_REGMAP->IMR, line_x)
+#define EXTI_IMR_EN(line_x)         SET_BIT(EXTI_REGMAP->IMR, line_x)
+#define EXTI_IMR_DSBL(line_x)       CLEAN_BIT(EXTI_REGMAP->IMR, line_x)
 
 /*=====================================================================
  * EXTI event mask register (EXTI_EMR)
  * Address: 0x04
  * Reset value: 0x0000 0000
  *=====================================================================*/
-#define EXTI_EMR_EN(line_x)			SET_BIT(EXTI_REGMAP->EMR, line_x)
-#define EXTI_EMR_DSBL(line_x)		CLEAN_BIT(EXTI_REGMAP->EMR, line_x)
+#define EXTI_EMR_EN(line_x)         SET_BIT(EXTI_REGMAP->EMR, line_x)
+#define EXTI_EMR_DSBL(line_x)       CLEAN_BIT(EXTI_REGMAP->EMR, line_x)
 
 /*=====================================================================
  * EXTI rising edge trigger selection register (EXTI_RTSR)
@@ -81,7 +81,7 @@ typedef struct
  * Address: 0x15
  * Reset value: undefined
  *=====================================================================*/
-#define EXTI_PR_CLEAN_LINEx(line_x)		SET_BIT(EXTI_REGMAP->PR, line_x)
+#define EXTI_PR_CLEAN_LINEx(line_x)         SET_BIT(EXTI_REGMAP->PR, line_x)
 
 
 #endif /* EXTI_STM32L053_EXTI_REGMAP_H_ */

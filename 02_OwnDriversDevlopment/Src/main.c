@@ -21,9 +21,15 @@
 
 int main(void)
 {
+	uint8_t value = 0u;
+	value = sizeof(gpio_pinCfg_t);
+	value = sizeof(spi_cfg_t);
+	value = sizeof(i2c_cfg_t);
+	(void) value;
 
 
 
 
 	for(;;);
+	return 0;
 }

@@ -86,5 +86,28 @@ typedef enum{
 	HSI16_AS_I2C_CLK     /* 10: HSI16 clock selected as I2C1 clock*/
 }rcc_i2cxsel_t;
 
+/*=====================================================================
+ *
+ *=====================================================================*/
+
+/*
+ *
+ */
+typedef struct{
+	uint8_t rccIOPxRST:3;   /* RCC_IOPRSTR    - I/O port x reset bit*/
+	uint8_t rccIOPxEN:3;    /* RCC_IOPENR     - I/O port x enable bit*/
+	uint8_t rccIOPxSMEN:3;  /* RCC_IOPSMENR   - I/O port x clock enable during sleep mode bit*/
+}rcc_iopbit_t;
+
+/*
+ *
+ */
+typedef struct{
+	uint8_t rccI2CxRST:5;   /* RCC_APB1RSTR    - I2Cx Reset bit*/
+	uint8_t rccI2CxEN:5;    /* RCC_APB1ENR     - I2Cx Enable bit*/
+	uint8_t rccI2CxSMEN:5;  /* RCC_APB1SMENR   - I2Cx Clock enable during sleep mode bit*/
+	uint8_t rccI2CxSEL:5;   /* RCC_CCIPR       - I2Cx Clock source selection bits*/
+}rcc_i2cbit_t;
+
 
 #endif /* RCC_STM32L053_RCC_TYPES_H_ */

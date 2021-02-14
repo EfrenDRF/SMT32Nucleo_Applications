@@ -59,7 +59,6 @@ void myGPIO_Init(void)
 
 
 	// .- Set up the SPI GPIO pins as alternate function mode.
-	RCC_IOPA_CLK_EN();
 	gpio_PinInit(&SPI1pin.NSS);
 	gpio_PinInit(&SPI1pin.SCK);
 	gpio_PinInit(&SPI1pin.MOSI);
@@ -70,8 +69,6 @@ void myGPIO_Init(void)
 	userB1.gpioPinCfg.gpioPinNum   = PIN_13;
 	userB1.gpioPinCfg.gpioPinMode        = IN_MODE;
 	userB1.gpioPinCfg.gpioPinPuPd        = NO_PULL_UP_PULL_DOWN;
-
-	RCC_IOPC_CLK_EN();
 	gpio_PinInit(&userB1);
 
 }
@@ -83,17 +80,14 @@ void mySPI1_Init(void)
 {
 	spi_handle_t SPI1Handle;
 
-	SPI1Handle.pSPIx = SPI1_REGMAP;
-	SPI1Handle.SPIcfg.devMode = MASTER_MODE;
-	SPI1Handle.SPIcfg.comMode = SIMPLEX_TX_ONLY;
-	SPI1Handle.SPIcfg.cbr     = FPCLK_DIV_128;
-	SPI1Handle.SPIcfg.cpol    = LOW_IDLE_CLK;
-	SPI1Handle.SPIcfg.cpha    = FALLING_EDGE_CLK;
-	SPI1Handle.SPIcfg.ssm     = HW_NSS_MODE;
-	SPI1Handle.SPIcfg.ff      = MSB_FIRST;
-	SPI1Handle.SPIcfg.dff     = _8BIT_DFF;
-
-
-	RCC_SPI1_CLK_EN();
+	SPI1Handle.spiRegPtr = SPI1_REGMAP;
+	SPI1Handle.spiCfg.devMode = MASTER_MODE;
+	SPI1Handle.spiCfg.comMode = SIMPLEX_TX_ONLY;
+	SPI1Handle.spiCfg.cbr     = FPCLK_DIV_128;
+	SPI1Handle.spiCfg.cpol    = LOW_IDLE_CLK;
+	SPI1Handle.spiCfg.cpha    = FALLING_EDGE_CLK;
+	SPI1Handle.spiCfg.ssm     = HW_NSS_MODE;
+	SPI1Handle.spiCfg.ff      = MSB_FIRST;
+	SPI1Handle.spiCfg.dff     = _8BIT_DFF;
 	spi_Init(&SPI1Handle);
 }

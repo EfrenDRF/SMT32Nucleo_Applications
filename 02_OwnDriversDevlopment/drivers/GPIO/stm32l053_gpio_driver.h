@@ -27,13 +27,13 @@
  *=================================================================*/
 typedef struct
 {
-	gpio_pinnum_t gpioPinNum;          /* pin number 0 ... 15*/
-	gpio_mode_t   gpioPinMode;         /* pin mode*/
-	gpio_otype_t  gpioPinOutType;      /* pin output type*/
-	gpio_ospeed_t gpioPinOutSpeed;     /* pin output speed*/
-	gpio_pupd_t   gpioPinPuPd;         /* pin pull-up/pull-down cfg*/
-	gpio_altfun_t gpioPinAltFun;       /* pin alternate function selection 0 ..15 */
-	exti_rtsr_t   extiPinTriggerSel;   /* Pin trigger selection bits for the interrupt lines */
+	gpio_pinnum_t gpioPinNum:4;          /* pin number 0 ... 15*/
+	gpio_mode_t   gpioPinMode:3;         /* pin mode*/
+	gpio_otype_t  gpioPinOutType:1;      /* pin output type*/
+	gpio_ospeed_t gpioPinOutSpeed:2;     /* pin output speed*/
+	gpio_pupd_t   gpioPinPuPd:2;         /* pin pull-up/pull-down cfg*/
+	gpio_altfun_t gpioPinAltFun:3;       /* pin alternate function selection 0 ..15 */
+	exti_rtsr_t   extiPinTriggerSel:2;   /* Pin trigger selection bits for the interrupt lines */
 }gpio_pinCfg_t;
 
 

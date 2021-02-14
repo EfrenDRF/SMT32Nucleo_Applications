@@ -27,7 +27,7 @@
  */
 typedef struct
 {
-	rcc_i2cxsel_t rccI2CclkSrc; /*I2C clock source selection*/
+	rcc_i2cxsel_t rccI2CclkSrc:2; /*I2C clock source selection*/
 
 }i2c_cfg_t;
 
@@ -40,7 +40,12 @@ typedef struct
 	i2c_cfg_t      i2cCfg;
 }i2c_handle_t;
 
-void i2c_Init(i2c_handle_t * i2cHandlePtr);
+/*Global function declaration_____________________________________________________*/
+
+/*=================================================================
+ * APIs supported by I2C driver.
+ *=================================================================*/
+FUNC(void,EXTERN) i2c_Init(CONSTPTR2_VAR(i2c_handle_t,AUTO) i2cHandlePtr);
 
 
 #endif /* COM_INF_I2C_STM32L053_I2C_DRIVER_H_ */

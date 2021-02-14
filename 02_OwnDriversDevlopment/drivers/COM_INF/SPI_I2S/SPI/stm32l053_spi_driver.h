@@ -26,14 +26,14 @@
  */
 typedef struct
 {
-	spi_mstr_t    devMode;     /*Device mode*/
-	spi_commode_t comMode;     /*Communication mode*/
-	spi_br_t      cbr;         /*Clock baud rate*/
-	spi_cpol_t    cpol;        /*Clock polarity*/
-	spi_cpha_t    cpha;        /*Clock phase*/
-	spi_ssm_t     ssm;         /*Software slave management*/
-	spi_ff_t      ff;          /*Frame format*/
-	spi_dff_t     dff;         /*Data frame format*/
+	spi_mstr_t    devMode:2;     /*Device mode*/
+	spi_commode_t comMode:2;     /*Communication mode*/
+	spi_br_t      cbr:3;         /*Clock baud rate*/
+	spi_cpol_t    cpol:1;        /*Clock polarity*/
+	spi_cpha_t    cpha:1;        /*Clock phase*/
+	spi_ssm_t     ssm:1;         /*Software slave management*/
+	spi_ff_t      ff:1;          /*Frame format*/
+	spi_dff_t     dff:1;         /*Data frame format*/
 }spi_cfg_t;
 
 
@@ -42,8 +42,8 @@ typedef struct
  */
 typedef struct
 {
-	spi_regMap_t * pSPIx;
-	spi_cfg_t SPIcfg;
+	spi_regMap_t  *spiRegPtr;
+	spi_cfg_t      spiCfg;
 }spi_handle_t;
 
 /*Macro definition________________________________________________________________*/
@@ -53,11 +53,11 @@ typedef struct
 /*=================================================================
  * APIs supported by SPI driver.
  *=================================================================*/
-void spi_Init(spi_handle_t * pSPIhandle);
-void spi_PeriphCtrl(spi_regMap_t * const pSPIx, uint8_t control);
+FUNC(void,EXTERN) spi_Init(CONSTPTR2_VAR(spi_handle_t, AUTO)spiHandlePtr);
+FUNC(void,EXTERN) spi_PeriphCtrl(CONSTPTR2_VAR(spi_regMap_t,AUTO) spiRegPtr, VAR(uint8_t,AUTO) control);
 
-void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen);
-void spi_ReceiveData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen);
+FUNC(void,EXTERN) spi_SendData(CONSTPTR2_VAR(spi_regMap_t,AUTO) spiRegPtr, CONSTPTR2_CONST(uint8_t,AUTO)u8DataPrt, VAR(uint8_t,AUTO) u8Length);
+FUNC(void,EXTERN) spi_ReceiveData(CONSTPTR2_VAR(spi_regMap_t,AUTO) spiRegPtr, CONSTPTR2_VAR(uint8_t,AUTO)u8DataPrt, VAR(uint8_t,AUTO) u8Length);
 
 
 #endif /* COM_INF_SPI_I2S_SPI_STM32L053_SPI_DRIVER_H_ */

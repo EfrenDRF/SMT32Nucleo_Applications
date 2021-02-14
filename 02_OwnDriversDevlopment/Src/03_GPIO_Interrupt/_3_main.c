@@ -72,10 +72,6 @@ static void myGPIO_Init(void)
 	pinUserButton.gpioPinCfg.gpioPinPuPd = NO_PULL_UP_PULL_DOWN;
 	pinUserButton.gpioPinCfg.extiPinTriggerSel = RISING_TRG_EN;
 
-	// .- Enables PORTA and PORTC clocks.
-	RCC_IOPA_CLK_EN();
-	RCC_IOPC_CLK_EN();
-
 	// .- Configures the GPIO pin
 	gpio_PinInit(&pinGreenLED);
 	gpio_PinInit(&pinUserButton);

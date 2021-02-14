@@ -74,7 +74,6 @@ static void myGPIO_Init(void)
 	myGPIOPort.gpioPinCfg.gpioPinOutSpeed = LOW_SPD;
 	myGPIOPort.gpioPinCfg.gpioPinPuPd = NO_PULL_UP_PULL_DOWN;
 
-	RCC_IOPA_CLK_EN();
 	gpio_PinInit(&myGPIOPort);
 
 	/*Pin 13 configured as Input to read the User Button status*/
@@ -83,7 +82,6 @@ static void myGPIO_Init(void)
 	myGPIOPort.gpioPinCfg.gpioPinMode = IN_MODE;
 	myGPIOPort.gpioPinCfg.gpioPinPuPd = NO_PULL_UP_PULL_DOWN;
 
-	RCC_IOPC_CLK_EN();
 	gpio_PinInit(&myGPIOPort);
 
 }

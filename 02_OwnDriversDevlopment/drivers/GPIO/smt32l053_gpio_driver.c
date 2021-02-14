@@ -77,13 +77,13 @@ FUNC(void, AUTO) gpio_PinInit(CONSTPTR2_VAR(gpio_handle_t, AUTO) gpioHandlePtr)
   CONSTPTR2_CONST(gpio_pinCfg_t,AUTO)  gpioPinCfgPtr = &gpioHandlePtr->gpioPinCfg;
   CONST(uint8_t,AUTO) pinNum = (uint8_t)gpioPinCfgPtr->gpioPinNum;
   CONST(uint8_t,AUTO) bitFieldPos = (pinNum << 1u);
-  CONST(uint8_t,AUTO) tmpGpioIndex = gpio_GetGPIOIndex(gpioRegPtr);
+  CONST(uint8_t,AUTO) gpioIndex = gpio_GetGPIOIndex(gpioRegPtr);
   VAR  (uint8_t,AUTO) tmpAFRx = 0u;
   VAR  (uint8_t,AUTO) tmpAFSELy = 0u;
 
 
   // .- Enables RCC IOPORTx bus clock.
-  rcc_GPIOxClkCtrl( rcc_constIOPXENBIT[tmpGpioIndex], RCC_CLK_EN);
+  rcc_IOPxClkCtrl(gpioIndex, RCC_CLK_EN);
 
   // 0.- PUPDR bits field must be reset to analog purposes.
   //     <!-- 00: Neither pull-up nor pull-down -->
@@ -126,7 +126,7 @@ FUNC(void, AUTO) gpio_PinInit(CONSTPTR2_VAR(gpio_handle_t, AUTO) gpioHandlePtr)
 		   RCC_SYSCF_CLK_EN();
 
 		   // - Selects the source input for the EXTIx external interrupt.
-		   syscfg_EXTIx_Cfg((syscfg_extix_t)tmpGpioIndex, pinNum);
+		   syscfg_EXTIx_Cfg((syscfg_extix_t)gpioIndex, pinNum);
 
 		   // - Configures the trigger selection.
 		   exti_triggerSel_Cfg((uint8_t)pinNum, gpioPinCfgPtr->extiPinTriggerSel);
@@ -266,3 +266,4 @@ FUNC(void,AUTO) gpio_TogglePin(CONSTPTR2_VAR(gpio_regMap_t,AUTO) gpioRegPtr, VAR
 	gpioRegPtr->ODR ^= (BIT_SET << pinNum);
 }
 
+/****************************END OF FILE *******************************************/

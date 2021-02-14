@@ -14,7 +14,40 @@
 /*Include header files____________________________________________________________*/
 #include "stm32l053_spi_driver.h"
 #include "stm32l053_spii2s_driver.h"
+#include "stm32l053_rcc_driver.h"
 
+/*=====================================================================
+ * Local function definition
+ *=====================================================================*/
+
+/****************************************************************
+ * @fn			- gpio_GetSPIIndex.
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		-
+ */
+FUNC(uint8_t, STATIC) gpio_GetSPIIndex(CONSTPTR2_CONST(spi_regMap_t, AUTO) spiRegPtr)
+{
+	VAR(uint8_t,AUTO) retVal = 0u;
+
+	if (spiRegPtr == SPI1_REGMAP){retVal = SPI1_INDEX;}
+	else if (spiRegPtr == SPI2_REGMAP){retVal = SPI2_INDEX;}
+	else
+	{
+		/* Avoid Misra rule 15.7 */
+	}
+
+	return retVal;
+}
+
+/*=====================================================================
+ * Global function definition
+ *=====================================================================*/
 
 /****************************************************************
  * @fn			- spi_Init.
@@ -27,52 +60,52 @@
  *
  * @Note		- none
  */
-void spi_Init(spi_handle_t * pSPIhandle)
+FUNC(void,AUTO) spi_Init(CONSTPTR2_VAR(spi_handle_t, AUTO)spiHandlePtr)
 {
-	uint8_t u8Tmp =0u;
+	CONSTPTR2_VAR(spi_regMap_t,AUTO) spiRegPtr = spiHandlePtr->spiRegPtr;
+	CONSTPTR2_CONST(spi_cfg_t,AUTO)  spiCfgPtr = &spiHandlePtr->spiCfg;
+	CONST(uint8_t,AUTO)              spiIndex = gpio_GetSPIIndex(spiRegPtr);
 
-	// a) Configure the serial clock baud rate
-	if(pSPIhandle->SPIcfg.devMode != SLAVE_MODE)
+	// a) Turns on SPI peripheral clock.
+	rcc_SPIxClkCtrl(spiIndex, RCC_CLK_EN);
+
+	// b) Configures serial clock baud rate
+	if(spiCfgPtr->devMode != SLAVE_MODE)
 	{
-		u8Tmp = pSPIhandle->SPIcfg.cbr;
-		pSPIhandle->pSPIx->CR1 |= (u8Tmp << SPI_CR1_BR_B);
+		spiRegPtr->CR1 |= (spiCfgPtr->cbr << SPI_CR1_BR_B);
 	}
 
-	// b) Configure CPOL  and CPHA bits combination to define one of the for
+	// c) Configures CPOL  and CPHA bits combination to define one of the for
 	//    relationships between the data transfer and the serial clock.
-	u8Tmp = pSPIhandle->SPIcfg.cpha;
-	pSPIhandle->pSPIx->CR1 |= (u8Tmp << SPI_CR1_CPHA_B);
+	spiRegPtr->CR1 |= (spiCfgPtr->cpha << SPI_CR1_CPHA_B);
 
-	u8Tmp = pSPIhandle->SPIcfg.cpol;
-	pSPIhandle->pSPIx->CR1 |= (u8Tmp << SPI_CR1_CPOL_B);
+	spiRegPtr->CR1 |= (spiCfgPtr->cpol << SPI_CR1_CPOL_B);
 
-	// c) Configure the LSBFIST bit to define the frame format.
-	u8Tmp = pSPIhandle->SPIcfg.ff;
-	pSPIhandle->pSPIx->CR1 |= (u8Tmp << SPI_CR1_LSBFIRST_B);
+	// d) Configures LSBFIST bit to define the frame format.
+	spiRegPtr->CR1 |= (spiCfgPtr->ff << SPI_CR1_LSBFIRST_B);
 
-	// d) Configure SSM and SSI
-	u8Tmp = pSPIhandle->SPIcfg.ssm;
-	pSPIhandle->pSPIx->CR1 |= (u8Tmp << SPI_CR1_SSM_B);
+	// e) Configures SSM and SSI
+	spiRegPtr->CR1 |= (spiCfgPtr->ssm << SPI_CR1_SSM_B);
 
-	if(pSPIhandle->SPIcfg.ssm == SW_NSS_MODE)
+	if(spiCfgPtr->ssm == SW_NSS_MODE)
 	{
-		pSPIhandle->pSPIx->CR1 |= (1u << SPI_CR1_SSI_B);
+		spiRegPtr->CR1 |= (BIT_SET << SPI_CR1_SSI_B);
 	}
 	else
 	{
-		if(pSPIhandle->SPIcfg.devMode == MASTER_MODE)
+		if(spiCfgPtr->devMode == MASTER_MODE)
 		{
 			/* 1 : SS output is enabled in master mode and when the cell
 			 * is enabled. The cell cannot work in a multimaster environment
              */
-			pSPIhandle->pSPIx->CR2 |= (1u << SPI_CR2_SSOE_B);
+			spiRegPtr->CR2 |= (1u << SPI_CR2_SSOE_B);
 		}
-		else if(pSPIhandle->SPIcfg.devMode == MULTIMASTER_MODE)
+		else if(spiCfgPtr->devMode == MULTIMASTER_MODE)
 		{
 			/* 0: SS output is disabled in master mode and the cell can work
 			 *  in multimaster configuration
 			 */
-			pSPIhandle->pSPIx->CR2 &= ~(1u << SPI_CR2_SSOE_B);
+			spiRegPtr->CR2 &= ~(1u << SPI_CR2_SSOE_B);
 		}
 		else
 		{
@@ -80,28 +113,26 @@ void spi_Init(spi_handle_t * pSPIhandle)
 		}
 	}
 
-	// e) Configure the device mode
-	u8Tmp = (pSPIhandle->SPIcfg.devMode & 1u);
-	pSPIhandle->pSPIx->CR1 |= (u8Tmp << SPI_CR1_MSTR_B);
+	// f) Configures device mode
+	spiRegPtr->CR1 |= ((spiCfgPtr->devMode & 0x01u) << SPI_CR1_MSTR_B);
 
-	// f) Configure the data frame format
-	u8Tmp = pSPIhandle->SPIcfg.dff;
-	pSPIhandle->pSPIx->CR1 |= (u8Tmp << SPI_CR1_DDF_B);
+	// g) Configures data frame format
+	spiRegPtr->CR1 |= (spiCfgPtr->dff << SPI_CR1_DDF_B);
 
-	// g) Configure the communication mode.
-	switch(pSPIhandle->SPIcfg.comMode)
+	// h) Configures communication mode.
+	switch(spiCfgPtr->comMode)
 	{
 		case FULL_DUPLEX:
 		case SIMPLEX_TX_ONLY:
-			pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_BIDIMODE_B);
+			spiRegPtr->CR1 &= ~(1u << SPI_CR1_BIDIMODE_B);
 			break;
 		case SIMPLEX_RX_ONLY:
-			pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_BIDIMODE_B);
-			pSPIhandle->pSPIx->CR1 |= (1u << SPI_CR1_RXONLY_B);
+			spiRegPtr->CR1 &= ~(1u << SPI_CR1_BIDIMODE_B);
+			spiRegPtr->CR1 |= (1u << SPI_CR1_RXONLY_B);
 			break;
 		case HALF_DUPLEX:
-			pSPIhandle->pSPIx->CR1 &= ~(1u << SPI_CR1_RXONLY_B);
-			pSPIhandle->pSPIx->CR1 |= (1u << SPI_CR1_BIDIMODE_B);
+			spiRegPtr->CR1 &= ~(1u << SPI_CR1_RXONLY_B);
+			spiRegPtr->CR1 |= (1u << SPI_CR1_BIDIMODE_B);
 			break;
 		default:
 			break;
@@ -110,7 +141,7 @@ void spi_Init(spi_handle_t * pSPIhandle)
 }
 
 /****************************************************************
- * @fn			- spi_Init.
+ * @fn			- spi_PeriphCtrl.
  *
  * @brief		-
  *
@@ -120,20 +151,20 @@ void spi_Init(spi_handle_t * pSPIhandle)
  *
  * @Note		- none
  */
-void spi_PeriphCtrl(spi_regMap_t * const pSPIx, uint8_t control)
+FUNC(void,AUTO) spi_PeriphCtrl(CONSTPTR2_VAR(spi_regMap_t,AUTO) spiRegPtr, VAR(uint8_t,AUTO) control)
 {
 	if(control == BIT_SET)
 	{
 		// .- Enables SPI peripheral.
-		pSPIx->CR1 |= (1u << SPI_CR1_SPE_B);
+		spiRegPtr->CR1 |= (1u << SPI_CR1_SPE_B);
 	}
 	else
 	{
 		// .- Waits until SPI is not busy.
-		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_BSY_B) == BIT_SET);
+		while( spii2s_GetStatusFlag(spiRegPtr, SPI_SR_BSY_B) == BIT_SET);
 
 		// .- Disables SPI peripheral.
-		pSPIx->CR1 &= ~(1u << SPI_CR1_SPE_B);
+		spiRegPtr->CR1 &= ~(1u << SPI_CR1_SPE_B);
 	}
 }
 
@@ -149,14 +180,14 @@ void spi_PeriphCtrl(spi_regMap_t * const pSPIx, uint8_t control)
  *
  * @Note		- none
  */
-void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
+FUNC(void,AUTO) spi_SendData(CONSTPTR2_VAR(spi_regMap_t,AUTO) spiRegPtr, CONSTPTR2_CONST(uint8_t,AUTO)u8DataPrt, VAR(uint8_t,AUTO) u8Length)
 {
-	uint8_t u8TmpLen = uLen;
+	VAR(uint8_t,AUTO) tmpU8Length = u8Length;
 
-	while(u8TmpLen > 0u)
+	while(tmpU8Length > 0u)
 	{
 		// .- Wait until TXE flag (Tx buffer empty) is set.
-		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_TXE_B) == BIT_CLEAN);
+		while( spii2s_GetStatusFlag(spiRegPtr, SPI_SR_TXE_B) == BIT_CLEAN);
 
 		/*
 		 * It indicates that the internal Tx buffer is ready to be loaded
@@ -164,17 +195,17 @@ void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
 		 *
 		 * Clearing the TXE flag is performed by writing to the SPI_DR register.
 		 */
-		if( (pSPIx->CR1 & (1u << SPI_CR1_DDF_B)) == 0u )
+		if( (spiRegPtr->CR1 & (1u << SPI_CR1_DDF_B)) == 0u )
 		{
 			// .- 8 bits Data Frame Format.
-			pSPIx->DR = pData[uLen-u8TmpLen];
-			u8TmpLen--;
+			spiRegPtr->DR = u8DataPrt[u8Length-tmpU8Length];
+			tmpU8Length--;
 		}
 		else
 		{
 			// .- 16 bits Data Frame Format.
-			pSPIx->DR = (uint16_t)(*(uint16_t*)&pData[uLen-u8TmpLen]);
-			u8TmpLen-= 2;
+			spiRegPtr->DR = (uint16_t)(*(uint16_t*)&u8DataPrt[u8Length-tmpU8Length]);
+			tmpU8Length-= 2;
 		}
 
 	}
@@ -192,14 +223,14 @@ void spi_SendData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
  *
  * @Note		- none
  */
-void spi_ReceiveData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
+FUNC(void,AUTO) spi_ReceiveData(CONSTPTR2_VAR(spi_regMap_t,AUTO) spiRegPtr, CONSTPTR2_VAR(uint8_t,AUTO)u8DataPrt, VAR(uint8_t,AUTO) u8Length)
 {
-	uint8_t u8TmpLen = uLen;
+	VAR(uint8_t,AUTO) tmpU8Length = u8Length;
 
-	while(u8TmpLen > 0u)
+	while(tmpU8Length > 0u)
 	{
 		// .- Wait until RXNE flag (Rx buffer not empty) is set.
-		while( spii2s_GetStatusFlag(pSPIx, SPI_SR_RXE_B) == BIT_CLEAN);
+		while( spii2s_GetStatusFlag(spiRegPtr, SPI_SR_RXE_B) == BIT_CLEAN);
 
 
 		/*
@@ -209,17 +240,17 @@ void spi_ReceiveData(spi_regMap_t * const pSPIx, uint8_t *pData, uint8_t uLen)
 		 * SPI_DR register.
 		 */
 
-		if( (pSPIx->CR1 & (1u << SPI_CR1_DDF_B)) == 0u )
+		if( (spiRegPtr->CR1 & (1u << SPI_CR1_DDF_B)) == 0u )
 		{
 			// .- 8 bits Data Frame Format.
-			pData[uLen-u8TmpLen] = *(uint8_t*)&(pSPIx->DR);
-			u8TmpLen--;
+			u8DataPrt[u8Length-tmpU8Length] = *(uint8_t*)&(spiRegPtr->DR);
+			tmpU8Length--;
 		}
 		else
 		{
 			// .- 16 bits Data Frame Format.
-			*(uint16_t*)&pData[uLen-u8TmpLen] = *(uint16_t*)&(pSPIx->DR);
-			u8TmpLen-= 2;
+			*(uint16_t*)&u8DataPrt[u8Length-tmpU8Length] = *(uint16_t*)&(spiRegPtr->DR);
+			tmpU8Length-= 2;
 		}
 
 	}

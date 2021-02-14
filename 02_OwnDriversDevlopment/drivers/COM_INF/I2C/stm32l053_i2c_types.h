@@ -27,4 +27,10 @@ typedef enum
 	MASTER_Rx
 }i2c_modeSel_t;
 
+/*Macro definition______________________________________________________________*/
+#define I2C1_INDEX   0u
+#define I2C2_INDEX   1u
+#define I2C3_INDEX   2u
+#define I2CMAX_INDEX 3u
+
 #endif /* COM_INF_I2C_STM32L053_I2C_TYPES_H_ */

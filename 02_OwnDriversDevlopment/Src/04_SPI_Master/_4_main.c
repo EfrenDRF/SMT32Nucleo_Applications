@@ -77,8 +77,6 @@ static void mySPI1_GPIO_Init(void)
 	SPI1pin.MOSI.gpioPinCfg.gpioPinMode      = ALTFN_MODE;
 	SPI1pin.MOSI.gpioPinCfg.gpioPinAltFun    = ALT_FUN_0;
 
-	// .- Enables PORTA and PORTC clocks.
-	RCC_IOPA_CLK_EN();
 
 	// .- Configures the GPIO pin
 	gpio_PinInit(&SPI1pin.SCK);
@@ -93,18 +91,16 @@ static void mySPI1_Init(void)
 {
 	spi_handle_t SPI1Handle;
 
-	SPI1Handle.pSPIx = SPI1_REGMAP;
-	SPI1Handle.SPIcfg.devMode = MASTER_MODE;
-	SPI1Handle.SPIcfg.comMode = SIMPLEX_TX_ONLY;
-	SPI1Handle.SPIcfg.cbr     = FPCLK_DIV_8;
-	SPI1Handle.SPIcfg.cpol    = HIGH_IDLE_CLK;
-	SPI1Handle.SPIcfg.cpha    = RISING_EDGE_CLK;
-	SPI1Handle.SPIcfg.ssm     = SW_NSS_MODE;
-	SPI1Handle.SPIcfg.ff      = MSB_FIRST;
-	SPI1Handle.SPIcfg.dff     = _8BIT_DFF;
-
-
-	RCC_SPI1_CLK_EN();
+	SPI1Handle.spiRegPtr = SPI1_REGMAP;
+	SPI1Handle.spiCfg.devMode = MASTER_MODE;
+	SPI1Handle.spiCfg.comMode = SIMPLEX_TX_ONLY;
+	SPI1Handle.spiCfg.cbr     = FPCLK_DIV_8;
+	SPI1Handle.spiCfg.cpol    = HIGH_IDLE_CLK;
+	SPI1Handle.spiCfg.cpha    = RISING_EDGE_CLK;
+	SPI1Handle.spiCfg.ssm     = SW_NSS_MODE;
+	SPI1Handle.spiCfg.ff      = MSB_FIRST;
+	SPI1Handle.spiCfg.dff     = _8BIT_DFF;
+	
 	spi_Init(&SPI1Handle);
 }
 

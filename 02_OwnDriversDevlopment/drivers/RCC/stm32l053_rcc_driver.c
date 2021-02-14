@@ -14,21 +14,33 @@
 
 /*Include header files____________________________________________________________*/
 #include "stm32l053_rcc_driver.h"
+#include "stm32l053_spi_types.h"
+
 
 /*Macro definition_________________________________________________________________*/
 
 /*Local function declaration_______________________________________________________*/
 
-/*Global variable definition_______________________________________________________*/
-CONST(uint8_t, AUTO) rcc_constIOPXENBIT[GPIOMAX_INDEX] =
+/*=====================================================================
+ * Local constant definition
+ *=====================================================================*/
+CONST(rcc_iopbit_t,STATIC) rcc_constIOPxBITs[GPIOMAX_INDEX]=
 {
-		RCC_IOPENR_IOPAEN_B,
-		RCC_IOPENR_IOPBEN_B,
-		RCC_IOPENR_IOPCEN_B,
-		RCC_IOPENR_IOPDEN_B,
-		RCC_IOPENR_IOPEEN_B,
-		RCC_IOPENR_IOPHEN_B
+	{.rccIOPxRST=0u, .rccIOPxEN=RCC_IOPENR_IOPAEN_B, .rccIOPxSMEN=0u},
+	{.rccIOPxRST=0u, .rccIOPxEN=RCC_IOPENR_IOPBEN_B, .rccIOPxSMEN=0u},
+	{.rccIOPxRST=0u, .rccIOPxEN=RCC_IOPENR_IOPCEN_B, .rccIOPxSMEN=0u},
+	{.rccIOPxRST=0u, .rccIOPxEN=RCC_IOPENR_IOPDEN_B, .rccIOPxSMEN=0u},
+	{.rccIOPxRST=0u, .rccIOPxEN=RCC_IOPENR_IOPEEN_B, .rccIOPxSMEN=0u},
+	{.rccIOPxRST=0u, .rccIOPxEN=RCC_IOPENR_IOPHEN_B, .rccIOPxSMEN=0u},
 };
+
+CONST(rcc_i2cbit_t,STATIC) rcc_constI2CxBITs[I2CMAX_INDEX] =
+{
+	{.rccI2CxRST =0u, .rccI2CxEN=RCC_APB1ENR_I2C1EN_B, .rccI2CxSMEN=0u, .rccI2CxSEL=RCC_CCIPR_I2C1SEL_B},
+	{.rccI2CxRST =0u, .rccI2CxEN=RCC_APB1ENR_I2C1EN_B, .rccI2CxSMEN=0u, .rccI2CxSEL=RCC_CCIPR_I2C1SEL_B},
+	{.rccI2CxRST =0u, .rccI2CxEN=RCC_APB1ENR_I2C1EN_B, .rccI2CxSMEN=0u, .rccI2CxSEL=RCC_CCIPR_I2C1SEL_B},
+};
+
 /*=====================================================================
  * Local function definition
  *=====================================================================*/
@@ -38,7 +50,7 @@ CONST(uint8_t, AUTO) rcc_constIOPXENBIT[GPIOMAX_INDEX] =
  *=====================================================================*/
 
 /****************************************************************
- * @fn			- rcc_GPIOxClkCtrl.
+ * @fn			- rcc_IOPxClkCtrl.
  *
  * @brief		-
  *
@@ -48,17 +60,56 @@ CONST(uint8_t, AUTO) rcc_constIOPXENBIT[GPIOMAX_INDEX] =
  *
  * @Note		- none
  */
-FUNC(void, AUTO) rcc_GPIOxClkCtrl(CONST(uint8_t,AUTO)port_x, VAR(uint8_t,AUTO) control)
+FUNC(void, AUTO) rcc_IOPxClkCtrl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO) control)
+{
+	VAR(uint8_t,AUTO) tmpBit = rcc_constIOPxBITs[iopxIndex].rccIOPxEN;
+
+	if(control == RCC_CLK_EN){SET_BIT( RCC_REGMAP->IOPENR, tmpBit);}
+	else{CLEAN_BIT(RCC_REGMAP->IOPENR, tmpBit);}
+}
+
+/****************************************************************
+ * @fn			- rcc_I2CxClkCtrl.
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		- none
+ */
+FUNC(void, AUTO) rcc_I2CxClkCtrl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO) control)
+{
+	VAR(uint8_t,AUTO) tmpBit = rcc_constI2CxBITs[i2cxIndex].rccI2CxEN;
+	
+	if(control == RCC_CLK_EN){SET_BIT( RCC_REGMAP->APB1ENR, tmpBit);}
+	else{CLEAN_BIT(RCC_REGMAP->APB1ENR, tmpBit);}
+}
+
+/****************************************************************
+ * @fn			- rcc_SPIxClkCtrl.
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		- none
+ */
+FUNC(void, AUTO) rcc_SPIxClkCtrl(CONST(uint8_t,AUTO)spiIndex, VAR(uint8_t,AUTO) control)
 {
 	if(control == RCC_CLK_EN)
 	{
-		SET_BIT( RCC_REGMAP->IOPENR, port_x);
+		if(spiIndex == SPI1_INDEX){RCC_SPI1_CLK_EN();}
+		else{RCC_SPI2_CLK_EN();}
 	}
 	else
 	{
-		CLEAN_BIT(RCC_REGMAP->IOPENR, port_x);
+		if(spiIndex == SPI1_INDEX){RCC_SPI1_CLK_DSBL();}
+		else{RCC_SPI2_CLK_DSBL();}
 	}
-
 }
 /****************************************************************
  * @fn			- rcc_I2CxClkSrc.
@@ -71,24 +122,10 @@ FUNC(void, AUTO) rcc_GPIOxClkCtrl(CONST(uint8_t,AUTO)port_x, VAR(uint8_t,AUTO) c
  *
  * @Note		- none
  */
-FUNC(uint8_t, AUTO)rcc_I2CxClkSrc(VAR(rcc_i2cxsel_t,AUTO) clkSrc, VAR(uint8_t,AUTO) i2cxBit)
+FUNC(void, AUTO) rcc_I2CxClkSrc(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_i2cxsel_t,AUTO) clkSrc)
 {
-	uint8_t retVal = RCC_NOTOK;
-
-	if( (i2cxBit == RCC_CCIPR_I2C3SEL_B) || \
-		(i2cxBit == RCC_CCIPR_I2C2SEL_B) || \
-		(i2cxBit == RCC_CCIPR_I2C1SEL_B) )
-	{
-		if( (clkSrc == APB_AS_I2C_CLK) || \
-			(clkSrc == SYSTEM_AS_I2C_CLK) || \
-			(clkSrc == HSI16_AS_I2C_CLK) )
-		{
-			retVal = RCC_OK;
-			RCC_REGMAP->CCIPR &= ~( CLEAN_2B << i2cxBit);
-			RCC_REGMAP->CCIPR |= ( clkSrc << i2cxBit);
-		}
-	}
-
-	return retVal;
-
+	VAR(uint8_t,AUTO) tmpBit = rcc_constI2CxBITs[i2cxIndex].rccI2CxSEL;
+	
+	CLEAN_BITFIELD( RCC_REGMAP->CCIPR, ( CLEAN_2B << tmpBit) );
+	SET_BITFIELD( RCC_REGMAP->CCIPR, (clkSrc << tmpBit) );
 }
