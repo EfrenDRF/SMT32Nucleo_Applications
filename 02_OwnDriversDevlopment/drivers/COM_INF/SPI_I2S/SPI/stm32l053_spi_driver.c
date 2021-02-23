@@ -67,7 +67,7 @@ FUNC(void,AUTO) spi_Init(CONSTPTR2_VAR(spi_handle_t, AUTO)spiHandlePtr)
 	CONST(uint8_t,AUTO)              spiIndex = gpio_GetSPIIndex(spiRegPtr);
 
 	// a) Turns on SPI peripheral clock.
-	rcc_SPIxClkCtrl(spiIndex, RCC_CLK_EN);
+	rcc_SPIxClockControl(spiIndex, RCC_CLK_EN);
 
 	// b) Configures serial clock baud rate
 	if(spiCfgPtr->devMode != SLAVE_MODE)

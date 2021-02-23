@@ -40,6 +40,8 @@ typedef struct
 }i2c_regMap_t;
 
 /*Macro definition_______________________________________________________________*/
+#define I2C_EN   0u
+#define I2C_DSBL 1u
 /*
  * I2C1, I2C2, and I2C3 peripherals base address.
  *
@@ -87,7 +89,7 @@ typedef struct
 #define I2C_CR1_ALERTEN_B       22u
 #define I2C_CR1_SMBDEN_B        21u
 #define I2C_CR1_SMBHEN_B        20u
-#define I2C_CR1_GCEN_B          119u
+#define I2C_CR1_GCEN_B          19u
 #define I2C_CR1_WUPEN_B         18u
 #define I2C_CR1_NOSTRETCH_B     17u
 #define I2C_CR1_SBC_B           16u
@@ -104,5 +106,26 @@ typedef struct
 #define I2C_CR1_TXIE_B          1u
 #define I2C_CR1_PE_B            0u
 
+/*=====================================================================
+ * Own address 1 register (I2C_OAR1)
+ * Address: 0x08
+ * Reset value: 0x0000
+ *=====================================================================*/
+/** bit field position*/
+#define I2C_OAR1_OA1EN_B        15u
+#define I2C_OAR1_OA1MODE_B      10u
+#define I2C_OAR1_OA1_9_8_B       8u
+#define I2C_OAR1_OA1_7_1_B       1u
+#define I2C_OAR1_OA1_0_B         0u
+
+/*=====================================================================
+ * Own address 2 register (I2C_OAR2)
+ * Address: 0x0C
+ * Reset value: 0x0000
+ *=====================================================================*/
+/** bit field position*/
+#define I2C_OAR2_OA2EN_B        15u
+#define I2C_OAR2_OA2MSK_B        8u
+#define I2C_OAR2_OA2_7_1_B       1u
 
 #endif /* COM_INF_I2C_STM32L053_I2C_REGMAP_H_ */

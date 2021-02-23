@@ -153,13 +153,13 @@
 /*
  *
  */
-FUNC(void, EXTERN) rcc_IOPxClkCtrl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO) control);
-FUNC(void, EXTERN) rcc_I2CxClkCtrl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO) control);
-FUNC(void, EXTERN) rcc_SPIxClkCtrl(CONST(uint8_t,AUTO)spiIndex,VAR(uint8_t,AUTO) control);
+FUNC(void, EXTERN) rcc_IOPxClockControl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO) control);
+FUNC(void, EXTERN) rcc_I2CxClockControl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO) control);
+FUNC(void, EXTERN) rcc_SPIxClockControl(CONST(uint8_t,AUTO)spiIndex,VAR(uint8_t,AUTO) control);
 
 /*
  *
  */
-FUNC(void, EXTERN) rcc_I2CxClkSrc(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_i2cxsel_t,AUTO) clkSrc);
+FUNC(void, EXTERN) rcc_I2CxClockSource(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_i2cxsel_t,AUTO) clockSource);
 
 #endif /* RCC_STM32L053_RCC_DRIVER_H_ */

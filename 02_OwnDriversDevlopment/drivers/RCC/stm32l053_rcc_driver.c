@@ -50,7 +50,7 @@ CONST(rcc_i2cbit_t,STATIC) rcc_constI2CxBITs[I2CMAX_INDEX] =
  *=====================================================================*/
 
 /****************************************************************
- * @fn			- rcc_IOPxClkCtrl.
+ * @fn			- rcc_IOPxClockControl.
  *
  * @brief		-
  *
@@ -60,7 +60,7 @@ CONST(rcc_i2cbit_t,STATIC) rcc_constI2CxBITs[I2CMAX_INDEX] =
  *
  * @Note		- none
  */
-FUNC(void, AUTO) rcc_IOPxClkCtrl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO) control)
+FUNC(void, AUTO) rcc_IOPxClockControl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO) control)
 {
 	VAR(uint8_t,AUTO) tmpBit = rcc_constIOPxBITs[iopxIndex].rccIOPxEN;
 
@@ -69,7 +69,7 @@ FUNC(void, AUTO) rcc_IOPxClkCtrl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO)
 }
 
 /****************************************************************
- * @fn			- rcc_I2CxClkCtrl.
+ * @fn			- rcc_I2CxClockControl.
  *
  * @brief		-
  *
@@ -79,7 +79,7 @@ FUNC(void, AUTO) rcc_IOPxClkCtrl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO)
  *
  * @Note		- none
  */
-FUNC(void, AUTO) rcc_I2CxClkCtrl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO) control)
+FUNC(void, AUTO) rcc_I2CxClockControl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO) control)
 {
 	VAR(uint8_t,AUTO) tmpBit = rcc_constI2CxBITs[i2cxIndex].rccI2CxEN;
 	
@@ -88,7 +88,7 @@ FUNC(void, AUTO) rcc_I2CxClkCtrl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO)
 }
 
 /****************************************************************
- * @fn			- rcc_SPIxClkCtrl.
+ * @fn			- rcc_SPIxClockControl.
  *
  * @brief		-
  *
@@ -98,7 +98,7 @@ FUNC(void, AUTO) rcc_I2CxClkCtrl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO)
  *
  * @Note		- none
  */
-FUNC(void, AUTO) rcc_SPIxClkCtrl(CONST(uint8_t,AUTO)spiIndex, VAR(uint8_t,AUTO) control)
+FUNC(void, AUTO) rcc_SPIxClockControl(CONST(uint8_t,AUTO)spiIndex, VAR(uint8_t,AUTO) control)
 {
 	if(control == RCC_CLK_EN)
 	{
@@ -112,7 +112,7 @@ FUNC(void, AUTO) rcc_SPIxClkCtrl(CONST(uint8_t,AUTO)spiIndex, VAR(uint8_t,AUTO) 
 	}
 }
 /****************************************************************
- * @fn			- rcc_I2CxClkSrc.
+ * @fn			- rcc_I2CxClockSource.
  *
  * @brief		-
  *
@@ -122,10 +122,10 @@ FUNC(void, AUTO) rcc_SPIxClkCtrl(CONST(uint8_t,AUTO)spiIndex, VAR(uint8_t,AUTO) 
  *
  * @Note		- none
  */
-FUNC(void, AUTO) rcc_I2CxClkSrc(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_i2cxsel_t,AUTO) clkSrc)
+FUNC(void, AUTO) rcc_I2CxClockSource(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_i2cxsel_t,AUTO) clockSource)
 {
 	VAR(uint8_t,AUTO) tmpBit = rcc_constI2CxBITs[i2cxIndex].rccI2CxSEL;
 	
 	CLEAN_BITFIELD( RCC_REGMAP->CCIPR, ( CLEAN_2B << tmpBit) );
-	SET_BITFIELD( RCC_REGMAP->CCIPR, (clkSrc << tmpBit) );
+	SET_BITFIELD( RCC_REGMAP->CCIPR, (clockSource << tmpBit) );
 }

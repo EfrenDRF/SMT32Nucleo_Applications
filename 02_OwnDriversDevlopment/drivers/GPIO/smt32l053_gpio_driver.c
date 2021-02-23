@@ -83,7 +83,7 @@ FUNC(void, AUTO) gpio_PinInit(CONSTPTR2_VAR(gpio_handle_t, AUTO) gpioHandlePtr)
 
 
   // .- Enables RCC IOPORTx bus clock.
-  rcc_IOPxClkCtrl(gpioIndex, RCC_CLK_EN);
+  rcc_IOPxClockControl(gpioIndex, RCC_CLK_EN);
 
   // 0.- PUPDR bits field must be reset to analog purposes.
   //     <!-- 00: Neither pull-up nor pull-down -->
