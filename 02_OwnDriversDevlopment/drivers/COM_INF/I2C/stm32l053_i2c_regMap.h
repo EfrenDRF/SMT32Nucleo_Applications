@@ -107,6 +107,16 @@ typedef struct
 #define I2C_CR1_PE_B            0u
 
 /*=====================================================================
+ * Control register 2 (I2C_CR2)
+ * Address: 0x04
+ * Reset value: 0x0000
+ *=====================================================================*/
+
+/** bit field position*/
+#define I2C_CR2_ADD10_B         11u
+
+
+/*=====================================================================
  * Own address 1 register (I2C_OAR1)
  * Address: 0x08
  * Reset value: 0x0000

@@ -105,10 +105,10 @@ FUNC(void,STATIC) i2c_SlaveInit(CONSTPTR2_VAR(i2c_handle_t,AUTO) i2cHandlePtr)
 	if( (i2cRegPtr->OAR1 & (1u << I2C_OAR1_OA1EN_B)) == 0)
 	{
 		//.- Configures either in 7-bit mode (by default) or in 10-bit addressing mode.
-		i2cRegPtr->OAR1 |= (i2cCfgPtr->i2cAddressingMode << I2C_OAR1_OA1MODE_B);
+		i2cRegPtr->OAR1 |= (i2cCfgPtr->i2cAddrMode << I2C_OAR1_OA1MODE_B);
 
 		//.- Interface address
-		if(i2cCfgPtr->i2cAddressingMode == DEVICE_7BIT_ADDRESS)
+		if(i2cCfgPtr->i2cAddrMode == DEVICE_7BIT_ADDRESS)
 		{
 			/* 7-bit addressing mode */
 			i2cRegPtr->OAR1 &= ~(0x7Fu << I2C_OAR1_OA1_7_1_B);
@@ -142,7 +142,7 @@ FUNC(void,STATIC) i2c_SlaveInit(CONSTPTR2_VAR(i2c_handle_t,AUTO) i2cHandlePtr)
 	tmpU8 = i2cCfgPtr->i2cSlaveCfg.i2cGenAddr;
 	i2cRegPtr->CR1 |= ( tmpU8 << I2C_CR1_GCEN_B);
 
-	// .-
+	// .- Configure SBC in I2C_CR1*
 	if( (i2cRegPtr->CR1 & (1u << I2C_CR1_NOSTRETCH_B)) == 0u)
 	{
 		tmpU8 = i2cSlavePtr->i2cSlaveByteCtrl;
@@ -163,10 +163,17 @@ FUNC(void,STATIC) i2c_SlaveInit(CONSTPTR2_VAR(i2c_handle_t,AUTO) i2cHandlePtr)
 FUNC(void,STATIC) i2c_MasterInit(CONSTPTR2_VAR(i2c_handle_t,AUTO) i2cHandlePtr)
 {
 	CONSTPTR2_VAR(i2c_regMap_t,AUTO) i2cRegPtr = i2cHandlePtr->i2cRegPtr;
-	CONSTPTR2_CONST(i2c_cfg_t,AUTO)  i2cCfgPrt = &i2cHandlePtr->i2cCfg;
+	CONSTPTR2_CONST(i2c_cfg_t,AUTO)  i2cCfgPtr = &i2cHandlePtr->i2cCfg;
 
-	(void)i2cRegPtr;
-	(void)i2cCfgPrt;
+
+	CLEAN_BIT(i2cRegPtr->CR2,I2C_CR2_ADD10_B);
+	i2cRegPtr->CR2 |= (i2cCfgPtr->i2cAddrMode << I2C_CR2_ADD10_B);
+
+	if( i2cCfgPtr->i2cAddrMode == DEVICE_7BIT_ADDRESS)
+	{
+
+	}
+
 }
 
 /****************************************************************
