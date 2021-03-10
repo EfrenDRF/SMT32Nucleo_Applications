@@ -30,7 +30,8 @@
  */
 typedef struct
 {
-	uint8_t unused;
+	usart_cr1M1_t      usartWordLen:2;
+
 }usart_cfg_t;
 
 /*

@@ -27,6 +27,13 @@
 
 FUNC(void,AUTO) usart_Init(CONSTPTR2_VAR(usart_handle_t,AUTO) usartHandlePtr)
 {
+	CONSTPTR2_VAR(usart_regMap_t,AUTO) usartRegPtr = usartHandlePtr->usartRegPtr;
+	CONSTPTR2_CONST(usart_cfg_t,AUTO)  usartCfgPtr = &usartHandlePtr->usartCfg;
+
+
+	usartRegPtr->CR1 |= ( (usartCfgPtr->usartWordLen & 2u) << (USART_CR1_M1_B - 1u));
+	usartRegPtr->CR1 |= ( (usartCfgPtr->usartWordLen & 1u) << USART_CR1_M0_B);
+
 
 }
 

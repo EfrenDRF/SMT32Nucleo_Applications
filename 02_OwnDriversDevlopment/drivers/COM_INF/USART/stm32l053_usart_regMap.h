@@ -45,4 +45,17 @@ typedef struct
 #define USART4_REGMAP      ((usart_regMap_t*)MEMAP_USART4_PERIPH_BASEADDR)
 #define USART5_REGMAP      ((usart_regMap_t*)MEMAP_USART5_PERIPH_BASEADDR)
 
+
+/*=====================================================================
+ * Control register 1 (USART_CR1)
+ * Address: 0x00
+ * Reset value: 0x0000
+ *=====================================================================*/
+
+/** bit field position*/
+#define USART_CR1_M1_B            28u
+#define USART_CR1_EOBIE_B         27u
+#define USART_CR1_M0_B            12u
+#define USART_CR1_UE_B             0u
+
 #endif /* COM_INF_USART_STM32L053_USART_REGMAP_H_ */
