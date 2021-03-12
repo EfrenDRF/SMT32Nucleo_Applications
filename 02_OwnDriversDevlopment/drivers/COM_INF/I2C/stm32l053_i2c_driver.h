@@ -68,12 +68,12 @@ typedef struct
  */
 typedef struct
 {
-	i2c_intfmode_t  i2cIntfMode:1;         /*I2C interface mode */
-	i2c_spdmode_t   i2cSCLspeedMode:2;     /*I2C SCL speed mode*/
-	i2c_addrmode    i2cAddrMode:1;   /*I2C addressing mode*/
+	i2c_intfmode_t       i2cIntfMode:1;         /*I2C interface mode */
+	i2c_spdmode_t        i2cSCLspeedMode:2;     /*I2C SCL speed mode*/
+	i2c_addrmode         i2cAddrMode:1;         /*I2C addressing mode*/
 
-	i2c_slavecfg_t  i2cSlaveCfg;
-	rcc_i2cxsel_t   rccClockSource:2;      /*RCC clock source selection*/
+	i2c_slavecfg_t       i2cSlaveCfg;
+	rcc_ccipri2cxsel_t   rccClockSource:2;      /*RCC clock source selection*/
 }i2c_cfg_t;
 
 /*

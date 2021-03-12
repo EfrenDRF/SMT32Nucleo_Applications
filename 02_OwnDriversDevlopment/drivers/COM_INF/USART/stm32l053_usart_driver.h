@@ -18,6 +18,7 @@
 /*Include header files____________________________________________________________*/
 #include "stm32l053_usart_regMap.h"
 #include "stm32l053_usart_types.h"
+#include "stm32l053_rcc_types.h"
 
 /*typedef definition______________________________________________________________*/
 
@@ -30,8 +31,10 @@
  */
 typedef struct
 {
-	usart_cr1M1_t      usartWordLen:2;
-
+	usart_cr1m10_t       usartWordLen:2;
+  usart_cr2stop_t      usartStopBits:2;
+  usart_cr1over8_t     usartOverSamp:1;
+  rcc_cciprusartxsel_t rccClockSource:2;
 }usart_cfg_t;
 
 /*

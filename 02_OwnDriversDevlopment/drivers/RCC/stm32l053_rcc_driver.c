@@ -15,6 +15,7 @@
 /*Include header files____________________________________________________________*/
 #include "stm32l053_rcc_driver.h"
 #include "stm32l053_spi_types.h"
+#include "stm32l053_usart_types.h"
 
 
 /*Macro definition_________________________________________________________________*/
@@ -39,6 +40,14 @@ CONST(rcc_i2cbit_t,STATIC) rcc_constI2CxBITs[I2CMAX_INDEX] =
 	{.rccI2CxRST =0u, .rccI2CxEN=RCC_APB1ENR_I2C1EN_B, .rccI2CxSMEN=0u, .rccI2CxSEL=RCC_CCIPR_I2C1SEL_B},
 	{.rccI2CxRST =0u, .rccI2CxEN=RCC_APB1ENR_I2C1EN_B, .rccI2CxSMEN=0u, .rccI2CxSEL=RCC_CCIPR_I2C1SEL_B},
 	{.rccI2CxRST =0u, .rccI2CxEN=RCC_APB1ENR_I2C1EN_B, .rccI2CxSMEN=0u, .rccI2CxSEL=RCC_CCIPR_I2C1SEL_B},
+};
+
+CONST(rcc_usartbit_t,STATIC) rcc_constUSARTxBITs[USARTMAX_INDEX] =
+{
+	{.rccUSARTxRST = 0u, .rccUSARTxEN = RCC_APB2ENR_USART1EN_B, .rccUSARTxSMEN = 0u, .rccUSARTxSEL = RCC_CCIPR_USART1SEL_B},
+	{.rccUSARTxRST = 0u, .rccUSARTxEN = RCC_APB1ENR_USART2EN_B, .rccUSARTxSMEN = 0u, .rccUSARTxSEL = RCC_CCIPR_USART2SEL_B},
+	{.rccUSARTxRST = 0u, .rccUSARTxEN = RCC_APB1ENR_USART4EN_B, .rccUSARTxSMEN = 0u, .rccUSARTxSEL = 0u},
+	{.rccUSARTxRST = 0u, .rccUSARTxEN = RCC_APB1ENR_USART5EN_B, .rccUSARTxSMEN = 0u, .rccUSARTxSEL = 0u}
 };
 
 /*=====================================================================
@@ -122,10 +131,60 @@ FUNC(void, AUTO) rcc_SPIxClockControl(CONST(uint8_t,AUTO)spiIndex, VAR(uint8_t,A
  *
  * @Note		- none
  */
-FUNC(void, AUTO) rcc_I2CxClockSource(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_i2cxsel_t,AUTO) clockSource)
+FUNC(void, AUTO) rcc_I2CxClockSource(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_ccipri2cxsel_t,AUTO) clockSource)
 {
 	VAR(uint8_t,AUTO) tmpBit = rcc_constI2CxBITs[i2cxIndex].rccI2CxSEL;
 	
 	CLEAN_BITFIELD( RCC_REGMAP->CCIPR, ( CLEAN_2B << tmpBit) );
 	SET_BITFIELD( RCC_REGMAP->CCIPR, (clockSource << tmpBit) );
 }
+
+/****************************************************************
+ * @fn			- rcc_USARTxClockControl.
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		- none
+ */
+FUNC(void, AUTO) rcc_USARTxClockControl(CONST(uint8_t,AUTO)usartxIndex, VAR(uint8_t,AUTO) control)
+{
+	VAR(uint8_t,AUTO) tmpBit;
+	PTR2_VAR(uint32_t, AUTO) tmpRegPtr;
+
+	tmpBit = rcc_constUSARTxBITs[usartxIndex].rccUSARTxEN;
+	tmpRegPtr = (tmpBit == USART1_INDEX)?((uint32_t*)&RCC_REGMAP->APB2ENR):((uint32_t*)&RCC_REGMAP->APB1ENR);
+	
+	if(control == RCC_CLK_EN)
+	{
+		SET_BIT( tmpRegPtr[0], tmpBit);
+	}
+	else
+	{
+		CLEAN_BIT(tmpRegPtr[0], tmpBit);
+	}
+}
+
+/****************************************************************
+ * @fn			- rcc_USARTxClockSource.
+ *
+ * @brief		-
+ *
+ * @param[in]	-
+ *
+ * @return		-
+ *
+ * @Note		- none
+ */
+FUNC(void, AUTO) rcc_USARTxClockSource(CONST(uint8_t,AUTO)usartxIndex, CONST(rcc_cciprusartxsel_t,AUTO) clockSource)
+{
+	VAR(uint8_t,AUTO) tmpBit = rcc_constUSARTxBITs[usartxIndex].rccUSARTxSEL;
+	
+	CLEAN_BITFIELD( RCC_REGMAP->CCIPR, ( CLEAN_2B << tmpBit) );
+	SET_BITFIELD( RCC_REGMAP->CCIPR, (clockSource << tmpBit) );
+}
+
+/****************************END OF FILE *******************************************/

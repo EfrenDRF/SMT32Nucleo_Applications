@@ -78,13 +78,27 @@ typedef enum
  *=====================================================================*/
 
 /*
- *  I2C clock source selection
+ *  Bits 13:12 I2C1SEL: I2C1 clock source selection bits
+ *  Bits 17:16 I2C3SEL: I2C3 clock source selection bits
  */
-typedef enum{
-	APB_AS_I2C_CLK,      /* 00: APB clock selected as I2C1 clock*/
-	SYSTEM_AS_I2C_CLK,   /* 01: System clock selected as I2C1 clock*/
-	HSI16_AS_I2C_CLK     /* 10: HSI16 clock selected as I2C1 clock*/
-}rcc_i2cxsel_t;
+typedef enum
+{
+	RCC_APB_CLK_AS_I2C_CLK       /* 00: APB clock selected as I2C1 clock*/,
+	RCC_SYSTEM_CLK_AS_I2C_CLK    /* 01: System clock selected as I2C1 clock*/,
+	RCC_HSI16_CLK_AS_I2C_CLK     /* 10: HSI16 clock selected as I2C1 clock*/
+}rcc_ccipri2cxsel_t;
+
+/*
+ *  Bits 3:2 USART2SEL: USART2 clock source selection bits
+ *  Bits 1:0 USART1SEL: USART1 clock source selection bits
+ */
+typedef enum
+{
+	RCC_APB_CLK_AS_USART_CLK         /*00: APB clock selected as USART1 clock*/,
+	RCC_SYSTEM_CLK_AS_USART_CLK      /*01: System clock selected as USART1 clock*/,
+	RCC_HSI16_CLK_AS_USART_CLK       /*10: HSI16 clock selected as USART1 clock*/,
+	RCC_LSE_CLK_AS_USART_CLK         /*11: LSE clock selected as USART1 clock*/
+}rcc_cciprusartxsel_t;
 
 /*=====================================================================
  *
@@ -93,7 +107,8 @@ typedef enum{
 /*
  *
  */
-typedef struct{
+typedef struct
+{
 	uint8_t rccIOPxRST:3;   /* RCC_IOPRSTR    - I/O port x reset bit*/
 	uint8_t rccIOPxEN:3;    /* RCC_IOPENR     - I/O port x enable bit*/
 	uint8_t rccIOPxSMEN:3;  /* RCC_IOPSMENR   - I/O port x clock enable during sleep mode bit*/
@@ -102,12 +117,23 @@ typedef struct{
 /*
  *
  */
-typedef struct{
+typedef struct
+{
 	uint8_t rccI2CxRST:5;   /* RCC_APB1RSTR    - I2Cx Reset bit*/
 	uint8_t rccI2CxEN:5;    /* RCC_APB1ENR     - I2Cx Enable bit*/
 	uint8_t rccI2CxSMEN:5;  /* RCC_APB1SMENR   - I2Cx Clock enable during sleep mode bit*/
 	uint8_t rccI2CxSEL:5;   /* RCC_CCIPR       - I2Cx Clock source selection bits*/
 }rcc_i2cbit_t;
 
+/*
+ *
+ */
+typedef struct
+{
+	uint8_t rccUSARTxRST:5;     /* RCC_APB2RSTR  & RCC_APB1RSTR  - USARTx reset*/
+	uint8_t rccUSARTxEN:5;      /* RCC_APB2ENR   & RCC_APB1ENR   - USARTx clock enable bit*/
+	uint8_t rccUSARTxSMEN:5;    /* RCC_APB2SMENR & RCC_APB1SMENR - USARTx clock enable during Sleep mode bit*/
+	uint8_t rccUSARTxSEL:2;     /* RCC_CCIPR                     - USARTx clock source selection bits*/
+}rcc_usartbit_t;
 
 #endif /* RCC_STM32L053_RCC_TYPES_H_ */

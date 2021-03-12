@@ -19,12 +19,44 @@
  *=================================================================*/
 /*
  * Bit 28 M1: Word length
+ * Bit 12 M0: Word length
  */
 typedef enum
 {
 	USART_8_DATA_BIT  /*00: 1 Start bit, 8 data bits, n stop bits*/,
 	USART_9_DATA_BIT  /*01: 1 Start bit, 9 data bits, n stop bits*/,
 	USART_7_DATA_BIT  /*10: 1 Start bit, 7 data bits, n stop bits*/
-}usart_cr1M1_t;
+}usart_cr1m10_t;
+
+/*
+ * Bit 15 OVER8: Oversampling mode
+ */
+typedef enum
+{
+  USART_OVERSAMPLING_BY_16  /*0: Oversampling by 16*/,
+  USART_OVERSAMPLING_BY_8   /*1: Oversampling by 8*/
+}usart_cr1over8_t;
+
+/*=================================================================
+ * Data types related to Control register 2 (USART_CR2).
+ *=================================================================*/
+/*
+ * Bits 13:12 STOP[1:0]: STOP bits
+ */
+typedef enum
+{
+  USART_1_STOP_BIT     /*00: 1 stop bit*/,
+  USART_0_5_STOP_BIT   /*01: 0.5 stop bit*/,
+  USART_2_STOP_BIT     /*10: 2 stop bits*/,
+  USART_1_5_STOP_BIT   /*11: 1.5 stop bits*/
+}usart_cr2stop_t;
+
+/*Macro definition______________________________________________________________*/
+#define USART1_INDEX       0u
+#define USART2_INDEX       1u
+#define USART4_INDEX       2u
+#define USART5_INDEX       3u
+#define USARTMAX_INDEX     4u
+
 
 #endif /* COM_INF_USART_STM32L053_USART_TYPES_H_ */

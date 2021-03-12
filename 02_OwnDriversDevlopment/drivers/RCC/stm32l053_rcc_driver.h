@@ -156,10 +156,11 @@
 FUNC(void, EXTERN) rcc_IOPxClockControl(CONST(uint8_t,AUTO)iopxIndex, VAR(uint8_t,AUTO) control);
 FUNC(void, EXTERN) rcc_I2CxClockControl(CONST(uint8_t,AUTO)i2cxIndex, VAR(uint8_t,AUTO) control);
 FUNC(void, EXTERN) rcc_SPIxClockControl(CONST(uint8_t,AUTO)spiIndex,VAR(uint8_t,AUTO) control);
+FUNC(void, EXTERN) rcc_USARTxClockControl(CONST(uint8_t,AUTO)usartxIndex, VAR(uint8_t,AUTO) control);
 
 /*
  *
  */
-FUNC(void, EXTERN) rcc_I2CxClockSource(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_i2cxsel_t,AUTO) clockSource);
-
+FUNC(void, EXTERN) rcc_I2CxClockSource(CONST(uint8_t,AUTO)i2cxIndex, CONST(rcc_ccipri2cxsel_t,AUTO) clockSource);
+FUNC(void, EXTERN) rcc_USARTxClockSource(CONST(uint8_t,AUTO)usartxIndex, CONST(rcc_cciprusartxsel_t,AUTO) clockSource);
 #endif /* RCC_STM32L053_RCC_DRIVER_H_ */

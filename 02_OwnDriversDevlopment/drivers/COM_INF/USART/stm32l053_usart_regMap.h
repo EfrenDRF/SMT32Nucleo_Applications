@@ -53,9 +53,20 @@ typedef struct
  *=====================================================================*/
 
 /** bit field position*/
-#define USART_CR1_M1_B            28u
-#define USART_CR1_EOBIE_B         27u
-#define USART_CR1_M0_B            12u
-#define USART_CR1_UE_B             0u
+#define USART_CR1_M1_B                    28u
+#define USART_CR1_EOBIE_B                 27u
+#define USART_CR1_OVER8_B                 15u
+#define USART_CR1_M0_B                    12u
+#define USART_CR1_UE_B                     0u
+
+/*=====================================================================
+ * Control register 2 (USART_CR2)
+ * Address: 0x04
+ * Reset value: 0x0000
+ *=====================================================================*/
+
+/** bit field position*/
+#define USART_CR2_STOP_B                  12u
+
 
 #endif /* COM_INF_USART_STM32L053_USART_REGMAP_H_ */
