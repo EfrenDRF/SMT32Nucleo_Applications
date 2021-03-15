@@ -57,6 +57,8 @@ typedef struct
 #define USART_CR1_EOBIE_B                 27u
 #define USART_CR1_OVER8_B                 15u
 #define USART_CR1_M0_B                    12u
+#define USART_CR1_PCE_B                   10u
+#define USART_CR1_PS_B                     9u
 #define USART_CR1_TE_B                     3u
 #define USART_CR1_RE_B                     2u
 #define USART_CR1_UESM_B                   1u
@@ -80,5 +82,6 @@ typedef struct
 /** bit field position*/
 #define USART_ISR_TXE_B                    7u
 #define USART_ISR_TC_B                     6u
+#define USART_ISR_RXNE_B                   5u
 
 #endif /* COM_INF_USART_STM32L053_USART_REGMAP_H_ */

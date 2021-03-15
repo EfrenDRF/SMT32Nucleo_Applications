@@ -29,6 +29,17 @@ typedef enum
 }usart_cr1m10_t;
 
 /*
+ * Bit 10 PCE: Parity control enable
+ * Bit 9 PS: Parity selection
+ */
+typedef enum
+{
+	USART_NONE_PARITY      /* 00: Parity control disabled*/,
+	USART_EVEN_PARITY = 2  /* 10: Parity control enabled _ Even parity*/,
+	USART_ODD_PARITY       /* 11: Parity control enabled _ Odd parity */
+}usart_cr1pceps_t;
+
+/*
  * Bit 15 OVER8: Oversampling mode
  */
 typedef enum
@@ -50,6 +61,19 @@ typedef enum
   USART_2_STOP_BIT     /*10: 2 stop bits*/,
   USART_1_5_STOP_BIT   /*11: 1.5 stop bits*/
 }usart_cr2stop_t;
+
+/*=================================================================
+ *
+ *=================================================================*/
+/*
+ *
+ */
+typedef enum
+{
+	USART_STD_2_4_KBPS        = 2400,
+	USART_STD_9_6_KBPS        = 9600,
+	USART_STD_115_2_KBPS      = 115200
+}usart_stdbaudrate_t;
 
 /*Macro definition______________________________________________________________*/
 #define USART1_INDEX       0u

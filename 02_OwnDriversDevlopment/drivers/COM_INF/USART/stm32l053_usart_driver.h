@@ -32,8 +32,10 @@
 typedef struct
 {
   usart_cr1m10_t         usartWordLen:2;
+  usart_stdbaudrate_t    usartBaudRate;
   usart_cr2stop_t        usartStopBits:2;
   usart_cr1over8_t       usartOverSamp:1;
+  usart_cr1pceps_t       usartParityControl:2;
   rcc_cciprusartxsel_t   rccClockSource:2;
 }usart_cfg_t;
 
@@ -49,6 +51,7 @@ typedef struct
 /*Macro definition_______________________________________________________________*/
 #define USART_EN   0u
 #define USART_DSBL 1u
+
 /*Global function declaration_____________________________________________________*/
 
 /*=================================================================
@@ -57,11 +60,10 @@ typedef struct
 
 
 FUNC(void,EXTERN) usart_Init(CONSTPTR2_VAR(usart_handle_t,AUTO) usartHandlePtr);
-
 FUNC(void,EXTERN) usart_DeInit(CONSTPTR2_VAR(usart_regMap_t,AUTO) usartRegPtr);
 
 
-FUNC(void,EXTERN) usart_SendData(CONSTPTR2_VAR(usart_regMap_t,AUTO) usartRegPtr, CONSTPTR2_CONST(uint8_t,AUTO)u8DataPrt, VAR(uint8_t,AUTO) u8Length, VAR(uint16_t,AUTO) u16TimeOut);
-FUNC(void,EXTERN) usart_ReceiveData(CONSTPTR2_VAR(usart_regMap_t,AUTO) usartRegPtr, CONSTPTR2_VAR(uint8_t,AUTO)u8DataPrt, VAR(uint8_t,AUTO) u8Length, VAR(uint16_t,AUTO) u16TimeOut);
+FUNC(void,EXTERN) usart_SendData(CONSTPTR2_VAR(usart_regMap_t,AUTO) usartRegPtr, PTR2_VAR(void,AUTO)dataPrt, VAR(uint8_t,AUTO) dataLength, VAR(uint16_t,AUTO) u16TimeOut);
+FUNC(void,EXTERN) usart_ReceiveData(CONSTPTR2_CONST(usart_regMap_t,AUTO) usartRegPtr, PTR2_VAR(void,AUTO)dataPrt, VAR(uint8_t,AUTO) dataLength, VAR(uint16_t,AUTO) u16TimeOut);
 
 #endif /* COM_INF_USART_STM32L053_USART_DRIVER_H_ */
