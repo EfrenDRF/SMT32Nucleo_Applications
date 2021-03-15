@@ -17,7 +17,7 @@
 #include "cordexM0p_nvic_driver.h"
 #include "stm32l053_spi_driver.h"
 #include "stm32l053_i2c_driver.h"
-
+#include "stm32l053_usart_driver.h"
 
 int main(void)
 {
